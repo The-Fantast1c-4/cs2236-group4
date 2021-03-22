@@ -73,6 +73,10 @@ public class List {
         // deletes a sublist
     }
 
+    public void accept(Visitor v){
+        v.visit(this);
+    }
+
 }
 
 

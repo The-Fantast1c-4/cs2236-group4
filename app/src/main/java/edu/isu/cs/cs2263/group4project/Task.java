@@ -63,6 +63,7 @@ public class Task {
 
     public boolean isOverDue() {
         //returns true if overdue
+        return false;
     }
     public void addLabel(String label){
         //adds label
@@ -88,5 +89,10 @@ public class Task {
 
     public Task clone(){
         //clones the task
+        return null;
+    }
+
+    public void accept(Visitor v){
+        v.visit(this);
     }
 }

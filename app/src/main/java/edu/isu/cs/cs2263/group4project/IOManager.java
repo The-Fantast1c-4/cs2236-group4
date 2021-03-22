@@ -11,6 +11,6 @@ public class IOManager {
 
     public String getUserInfoPath(){return pathToUserInfo;}
 
-    
+
 
 }

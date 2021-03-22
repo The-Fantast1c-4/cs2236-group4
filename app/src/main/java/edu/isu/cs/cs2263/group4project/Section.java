@@ -26,6 +26,7 @@ public class Section {
     }
     public Task getTask(String name){
         // returns a task
+        return null;
     }
     public void addTask(Task task){
         //creates task
@@ -35,6 +36,10 @@ public class Section {
     }
     public void moveToList(List list, Task task){
         //moves task to another list
+    }
+
+    public void accept(Visitor v){
+        v.visit(this);
     }
 
 
