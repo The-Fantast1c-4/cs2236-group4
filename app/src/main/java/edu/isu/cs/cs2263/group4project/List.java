@@ -6,13 +6,14 @@ public class List {
     private String name;
     private String description;
     private boolean isArchived = false;
-    private ArrayList<Section> sections;
-    private ArrayList<Comment> comments;
-    private ArrayList<SubList> subLists;
+    private ArrayList<Section> sections = new ArrayList<>();
+    private ArrayList<Comment> comments = new ArrayList<>();
+    private ArrayList<SubList> subLists = new ArrayList<>();
 
     public List(String name, String description) {
         this.name = name;
         this.description = description;
+        addSection("Default Section");
     }
 //getter methods
     public String getName() {
@@ -46,31 +47,82 @@ public class List {
 
     public Section getSection(String name){
         //returns section with name
-        return new Section();
+        for(Section section: sections){
+            if(section.getName().equals(name)){
+                return section;
+            }
+        }
+        return null;
     }
     public void Archive(){
-        //archives a list
+        this.isArchived = true;
     }
     public void unArchive(){
-        //unarchives a list
+        this.isArchived = false;
+    }
+    public void addComment(String commentText){
+        comments.add(new Comment(commentText));
     }
     public void addComment(Comment comment){
-        //adds comment
+        comments.add(comment);
+    }
+    public boolean addSection(String sectionName){
+        boolean nameExists = false;
+        for(Section section: sections){
+            if(section.getName().equals(sectionName)){
+                nameExists = true;
+            }
+        }
+        if (nameExists){
+            // Need to handle what happens if user attempts to recreate existing name, do we overwrite?
+            return false;
+        } else {
+            sections.add(new Section(sectionName));
+            return true;
+        }
     }
     public void addSection(Section section){
-        // adds a section
+        sections.add(section);
+    }
+    public boolean addSubList(String subListName, String subListDesc){
+        boolean nameExists = false;
+        for(SubList subList: subLists){
+            if(subList.getName().equals(subListName)){
+                nameExists = true;
+            }
+        }
+        if (nameExists){
+            // Need to handle what happens if user attempts to recreate existing name, do we overwrite?
+            return false;
+        } else {
+            subLists.add(new SubList(subListName, subListDesc));
+            return true;
+        }
     }
     public void addSubList(SubList subList){
-        // adds a sublist
+        subLists.add(subList);
     }
+
+
     public void deleteComment(Comment comment){
-        //deletes comment
+        boolean wasRemoved = comments.remove(comment);
+        if (!wasRemoved){
+            throw new Error("Specified comment was not found in the list of comments.");
+        }
     }
     public void deleteSection(Section section){
         // deletes a section
+        boolean wasRemoved = sections.remove(section);
+        if (!wasRemoved){
+            throw new Error("Specified section was not found in the list of sections");
+        }
     }
     public void deletesSubList(SubList subList){
         // deletes a sublist
+        boolean wasRemoved = subLists.remove(subList);
+        if (!wasRemoved){
+            throw new Error("Specified sublist was not found in the list of sublists");
+        }
     }
 
     public void accept(Visitor v){

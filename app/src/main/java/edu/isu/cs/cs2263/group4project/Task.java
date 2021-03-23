@@ -9,22 +9,26 @@ public class Task {
     private String description;
     private Date dueDate;
     private boolean complete;
-    private ArrayList<String> labels;
-    private ArrayList<SubTask> subTasks;
+    private ArrayList<String> labels = new ArrayList<>();
+    private ArrayList<SubTask> subTasks = new ArrayList<>();
 
     public Task(String name, int priority, String description, Date dueDate) {
         this.name = name;
         this.priority = priority;
         this.description = description;
         this.dueDate = dueDate;
+        this.complete = false;
     }
 
     public Task(String name, int priority, String description) {
         this.name = name;
         this.priority = priority;
         this.description = description;
+        this.complete = false;
+        this.dueDate = new Date();
     }
 
+    // Basic getter and setter methods
     public String getName() {
         return name;
     }
@@ -63,19 +67,53 @@ public class Task {
 
     public boolean isOverDue() {
         //returns true if overdue
-        return false;
+        return dueDate.after(new Date());       // Date() constructor automatically sets the time to the current time
     }
     public void addLabel(String label){
         //adds label
+        labels.add(label);
     }
     public void deleteLabel(String label){
         //deletes label
+        labels.remove(label);
     }
     public void addSubTask(SubTask subTask){
         //adds a subTask
+        subTasks.add(subTask);
+    }
+    public boolean addSubTask(String taskName, int priority, String description, Date dueDate){
+        boolean nameExists = false;
+        for(SubTask task: subTasks){
+            if(task.getName().equals(taskName)){
+                nameExists = true;
+            }
+        }
+        if (nameExists){
+            // Need to handle what happens if user attempts to recreate existing name, do we overwrite?
+            return false;
+        } else {
+            subTasks.add(new SubTask(taskName, priority, description, dueDate));
+            return true;
+        }
+    }
+    public boolean addSubTask(String taskName, int priority, String description){
+        boolean nameExists = false;
+        for(SubTask task: subTasks){
+            if(task.getName().equals(taskName)){
+                nameExists = true;
+            }
+        }
+        if (nameExists){
+            // Need to handle what happens if user attempts to recreate existing name, do we overwrite?
+            return false;
+        } else {
+            subTasks.add(new SubTask(taskName, priority, description));
+            return true;
+        }
     }
     public void deleteSubTask(SubTask subTask){
         //deletes a subTask
+        subTasks.remove(subTask);
     }
 
     @Override
@@ -89,7 +127,7 @@ public class Task {
 
     public Task clone(){
         //clones the task
-        return null;
+        return this.clone();
     }
 
     public void accept(Visitor v){
