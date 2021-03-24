@@ -2,7 +2,7 @@ package edu.isu.cs.cs2263.group4project;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.security.SecureRandom;
+import java.util.Arrays;
 
 public class UserInfo {
     private String firstName;
@@ -20,7 +20,7 @@ public class UserInfo {
         this.biography = bio;
         this.email = email;
         this.pathToPicture = pathToPicture;
-        this.hashedPassword = setPassword(password);
+        setPassword(password);
     }
 
     public String getFirstName(){return firstName;}
@@ -30,15 +30,11 @@ public class UserInfo {
     public String getEmail(){return email;}
     public String getPathToPicture(){return pathToPicture;}
 
-    private byte[] setPassword(String password){
+    private byte[] hashPassword(String password){
         // Hash the password here
-        SecureRandom random = new SecureRandom();
-        byte[] salt = new byte[16];
-        random.nextBytes(salt);
 
         try{
             MessageDigest md = MessageDigest.getInstance("SHA-512");
-            md.update(salt);
             byte[] hashedPass = md.digest(password.getBytes(StandardCharsets.UTF_8));
             return hashedPass;
         } catch (Exception NoSuchAlgorithmException){
@@ -50,8 +46,13 @@ public class UserInfo {
         return hashedPassword;
     }
 
+    private void setPassword(String password){
+        this.hashedPassword = hashPassword(password);
+    }
+
     public boolean attemptLogin(String password){
-        return false;
+        byte[] attempt = hashPassword(password);
+        return Arrays.equals(getHashedPassword(), attempt);
     }
 
 }

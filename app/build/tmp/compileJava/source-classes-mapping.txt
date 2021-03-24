@@ -1,13 +1,13 @@
 edu/isu/cs/cs2263/group4project/List.java
  edu.isu.cs.cs2263.group4project.List
-edu/isu/cs/cs2263/group4project/User.java
- edu.isu.cs.cs2263.group4project.User
+edu/isu/cs/cs2263/group4project/App.java
+ edu.isu.cs.cs2263.group4project.App
 edu/isu/cs/cs2263/group4project/Task.java
  edu.isu.cs.cs2263.group4project.Task
 edu/isu/cs/cs2263/group4project/UserLists.java
  edu.isu.cs.cs2263.group4project.UserLists
-edu/isu/cs/cs2263/group4project/UserInfo.java
- edu.isu.cs.cs2263.group4project.UserInfo
+edu/isu/cs/cs2263/group4project/Section.java
+ edu.isu.cs.cs2263.group4project.Section
 module-info.java
  module-info
 edu/isu/cs/cs2263/group4project/Settings.java
@@ -26,7 +26,9 @@ edu/isu/cs/cs2263/group4project/Filter.java
  edu.isu.cs.cs2263.group4project.Filter
 edu/isu/cs/cs2263/group4project/IOManager.java
  edu.isu.cs.cs2263.group4project.IOManager
-edu/isu/cs/cs2263/group4project/Section.java
- edu.isu.cs.cs2263.group4project.Section
-edu/isu/cs/cs2263/group4project/App.java
- edu.isu.cs.cs2263.group4project.App
+edu/isu/cs/cs2263/group4project/UiInterface.java
+ edu.isu.cs.cs2263.group4project.UiInterface
+edu/isu/cs/cs2263/group4project/User.java
+ edu.isu.cs.cs2263.group4project.User
+edu/isu/cs/cs2263/group4project/UserInfo.java
+ edu.isu.cs.cs2263.group4project.UserInfo
