@@ -3,12 +3,27 @@
  */
 package edu.isu.cs.cs2263.group4project;
 
-public class App {
-    public String getGreeting() {
-        return "Hello World!";
-    }
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+public class App extends Application {
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        Application.launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        // Here is where we put the call to our first state subclass
+        testState(primaryStage);
+    }
+
+    public void testState(Stage stage){
+        Scene scene = new Scene(new VBox(10), 595, 200);
+        stage.setTitle("Test Layout");
+        stage.setScene(scene);
+        stage.show();
     }
 }

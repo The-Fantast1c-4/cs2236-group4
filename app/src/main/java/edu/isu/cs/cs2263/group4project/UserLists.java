@@ -20,6 +20,7 @@ public class UserLists {
 
 
         /*returns a list of objects */
+        return null;
     }
 
     /* This method helps to make a new list*/
@@ -36,12 +37,12 @@ public class UserLists {
 
     /* Method to return Archived List */
     public List<List> getArchivedLists(){
-
+        return null;
     }
 
     /* Method to return Non Archived List */
     public List<List> getNonArchivedLists(){
-
+        return null;
     }
 
 
