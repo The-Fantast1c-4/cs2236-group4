@@ -5,9 +5,22 @@ public class Settings {
     private boolean logSystemInfo;
     private String logLocation;
     private int itemsShown;
+    private String userDataLocation;
 
     public Settings(){
         logSystemInfo = false;
+        userDirectory = "./config/users.json";
+        userDataLocation = "./data";
+        logLocation = "";
+        itemsShown = 10;
+    }
+
+    public String getUserDataDirectory(){
+        return userDataLocation;
+    }
+
+    public void setUserDataLocation(String location){
+        userDataLocation = location;
     }
 
     public String getUserDirectory(){
