@@ -35,6 +35,7 @@ public class LoginState extends Application implements UiInterface {
     }
 
     public void testState(Stage stage) {
+        //create nodes
         stage.setTitle("Login");
         Button logIN = new Button("Log in");
         Button signUp = new Button("Sign up");
@@ -43,11 +44,15 @@ public class LoginState extends Application implements UiInterface {
         Label unLabel = new Label("User Name:");
         Label passLabel = new Label("Password:");
         Label instructions = new Label("Dont have an accout?");
+
+        //create grid
         GridPane main = new GridPane();
         main.setPadding(new Insets(20.0D, 20.0D, 20.0D, 20.0D));
         main.setVgap(30.0D);
         main.setHgap(20.0D);
         main.setAlignment(Pos.CENTER);
+
+        //add nodes to grid
         main.add(unLabel, 0, 0);
         main.add(passLabel, 0, 1);
         main.add(userName, 1, 0);
@@ -55,9 +60,13 @@ public class LoginState extends Application implements UiInterface {
         main.add(logIN, 1, 2);
         main.add(instructions, 2, 0);
         main.add(signUp, 2, 1);
+        //style nodes
+
         logIN.setStyle("-fx-background-color: #e48257;");
         signUp.setStyle("-fx-background-color: #e48257;");
         main.setStyle("-fx-background-color: #f2edd7;");
+
+        //set scene
         Scene scene = new Scene(main);
         stage.setScene(scene);
         stage.show();
