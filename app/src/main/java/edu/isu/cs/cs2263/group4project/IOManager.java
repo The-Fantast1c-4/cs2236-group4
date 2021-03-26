@@ -1,9 +1,11 @@
 package edu.isu.cs.cs2263.group4project;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -71,7 +73,6 @@ public class IOManager {
                 Files.write(sysInfoFile.toPath(), logged.getBytes(), StandardOpenOption.APPEND);
             } catch (IOException e2){}
         }
-        return;
     }
 
     public static boolean whetherToLog(){
@@ -79,19 +80,76 @@ public class IOManager {
         return settings.isLogSystemInfo();
     }
 
-    public ArrayList<UserInfo> loadUserMacro(){
-        return null;
+    public static void saveUserMacro(ArrayList<UserInfo> infos){
+        String path = getUserInfoPath();
+        Gson gson = new Gson();
+        String jsonOut = gson.toJson(infos);
+
+        try {
+            Files.writeString(Paths.get(path), jsonOut);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
-    public User loadUser(String username, String password){
-        return null;
+    public static ArrayList<UserInfo> loadUserMacro(){
+        String path = getUserInfoPath();
+        String json = "";
+        try {
+            json = Files.readString(Paths.get(path));
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+        Gson gson = new Gson();
+        Type arrayListInfos = new TypeToken<ArrayList<UserInfo>>() {}.getType();
+        return gson.fromJson(json, arrayListInfos);
     }
 
-    public void saveUser(User user){
+    public static User loadUser(String username, String password){
+        String path = getUserDataPath();
+        String json = "";
+        try {
+            json = Files.readString(Paths.get(path + username + ".json"));
+        } catch (IOException e) {
+            System.out.println("User " + username + " does not exist");
+        }
+        Gson gson = new Gson();
+        User user = gson.fromJson(json, User.class);
+        if (!user.attemptLogin(password)){
+            return null;
+        }
+        return user;
+    }
+
+    public static void saveUser(User user){
+        String path = getUserDataPath();
+        Gson gson = new Gson();
+        String jsonOut = gson.toJson(user);
+
+        try {
+            Files.writeString(Paths.get(path + user.getUserInfo().getUsername() + ".json"), jsonOut);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
         return;
     }
 
     public static void main(String[] args){
+        UserInfo myInfo = new UserInfo("spierob2", "Robbie", "Spiers", "dumb college teen", "spierob2@isu.edu", "path", "hereismypassword");
+        User me = new User(myInfo);
+        UserInfo hisInfo = new UserInfo("mistryman", "Shivank", "Mistry", "info major", "shivu@gmail.com", "path2", "hereishispassword");
+        User shivu = new User(hisInfo);
 
+        ArrayList<UserInfo> infos = new ArrayList<>();
+        infos.add(myInfo);
+        infos.add(hisInfo);
+        saveUserMacro(infos);
+        saveUser(me);
+        saveUser(shivu);
+
+        User user1 = loadUser("spierob2", "hereismypassword");
+        User user2 = loadUser("spierob2", "wrongpassword");
+        ArrayList<UserInfo> loaded = loadUserMacro();
     }
 }

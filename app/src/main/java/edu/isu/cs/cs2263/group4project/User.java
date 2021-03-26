@@ -8,7 +8,7 @@ public class User {
     }
 
     public boolean attemptLogin(String password){
-        return false;
+        return userInfo.attemptLogin(password);
     }
 
     public void logout(){}
