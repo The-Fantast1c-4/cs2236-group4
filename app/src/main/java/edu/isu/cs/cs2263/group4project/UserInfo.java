@@ -46,7 +46,7 @@ public class UserInfo {
         return hashedPassword;
     }
 
-    private void setPassword(String password){
+    public void setPassword(String password){
         this.hashedPassword = hashPassword(password);
     }
 

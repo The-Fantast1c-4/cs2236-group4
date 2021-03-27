@@ -1,6 +1,6 @@
 package edu.isu.cs.cs2263.group4project;
 
-public class User {
+public abstract class User {
     private UserInfo userInfo;
 
     public User(UserInfo info){

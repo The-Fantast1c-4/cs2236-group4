@@ -106,6 +106,12 @@ public class IOManager {
         return gson.fromJson(json, arrayListInfos);
     }
 
+    public static void saveUserMacro(UserInfo info){
+        ArrayList<UserInfo> macros = loadUserMacro();
+        macros.add(info);
+        saveUserMacro(macros);
+    }
+
     public static User loadUser(String username, String password){
         String path = getUserDataPath();
         String json = "";
@@ -137,9 +143,9 @@ public class IOManager {
 
     public static void main(String[] args){
         UserInfo myInfo = new UserInfo("spierob2", "Robbie", "Spiers", "dumb college teen", "spierob2@isu.edu", "path", "hereismypassword");
-        User me = new User(myInfo);
+        User me = new StandardUser(myInfo);
         UserInfo hisInfo = new UserInfo("mistryman", "Shivank", "Mistry", "info major", "shivu@gmail.com", "path2", "hereishispassword");
-        User shivu = new User(hisInfo);
+        User shivu = new StandardUser(hisInfo);
 
         ArrayList<UserInfo> infos = new ArrayList<>();
         infos.add(myInfo);

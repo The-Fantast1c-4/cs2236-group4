@@ -1,51 +1,60 @@
 package edu.isu.cs.cs2263.group4project;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class UserLists {
     /* Arraylist to store List   */
     private ArrayList<List> lists;
-    /* text obtained from User  */
-    private String searchText;
 
     /*Constructor */
     public UserLists(){
-
+        lists = new ArrayList<>();
     }
 
     /* Methods */
-    /*This method searches the text and returns the matched object as a list. */
-    public List<Object> searchItems(String searchText){
-
-
-        /*returns a list of objects */
-        return null;
-    }
 
     /* This method helps to make a new list*/
     public void makeList(String name,String description){
-
-        //Also saves it as  a data
+        List newList = new List(name, description);
+        lists.add(newList);
     }
 
     /* Method to return lists */
-    public List<List> getLists(){
+    public ArrayList<List> getLists(){
         return lists;
         //returns lists
     }
 
     /* Method to return Archived List */
-    public List<List> getArchivedLists(){
-        return null;
+    public ArrayList<List> getArchivedLists(){
+        ArrayList<List> archivedLists = new ArrayList<>();
+        for (List list : lists){
+            if (list.isArchived()){
+                archivedLists.add(list);
+            }
+        }
+        return archivedLists;
     }
 
     /* Method to return Non Archived List */
-    public List<List> getNonArchivedLists(){
-        return null;
+    public ArrayList<List> getNonArchivedLists(){
+        ArrayList<List> nonArchivedLists = new ArrayList<>();
+        for (List list : lists){
+            if (list.isArchived()){
+                nonArchivedLists.add(list);
+            }
+        }
+        return nonArchivedLists;
     }
 
-
+    public List getList(String listName){
+        for (List list : lists){
+            if (list.getName().equals(listName)){
+                return list;
+            }
+        }
+        return null;
+    }
 
 
 
