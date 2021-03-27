@@ -1,6 +1,5 @@
 package edu.isu.cs.cs2263.group4project;
 
-package edu.isu.cs.cs2263;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
