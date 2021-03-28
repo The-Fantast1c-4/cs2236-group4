@@ -39,4 +39,8 @@ public class Admin extends User{
     public void updateSettings(Settings settings){
         IOManager.writeSettings(settings);
     }
+
+    public void deleteStandardUsers(){
+
+    }
 }

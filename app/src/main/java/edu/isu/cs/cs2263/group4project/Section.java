@@ -9,9 +9,11 @@ public class Section {
 
     public Section(String name) {
         this.name = name;
+        tasks = new ArrayList<>();
     }
     public Section() {
         name = "Default Section";
+        tasks = new ArrayList<>();
     }
 //getters and setters
     public String getName() {

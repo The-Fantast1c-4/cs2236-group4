@@ -8,6 +8,10 @@ public class Settings {
     private String userDataLocation;
 
     public Settings(){
+
+    }
+
+    public void loadSettings(){
         Settings tmpSet = IOManager.loadSettings();
         if (tmpSet == null){
             initializeSettings();
@@ -18,13 +22,12 @@ public class Settings {
         logLocation = tmpSet.getLogLocation();
         itemsShown = tmpSet.getItemsShown();
         userDataLocation = tmpSet.getUserDataDirectory();
-
     }
 
     public void initializeSettings(){
         logSystemInfo = false;
         userDirectory = "./config/users.json";
-        userDataLocation = "./data";
+        userDataLocation = "./data/";
         logLocation = "";
         itemsShown = 10;
 

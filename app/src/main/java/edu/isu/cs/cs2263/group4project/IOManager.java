@@ -107,12 +107,26 @@ public class IOManager {
     }
 
     public static void saveUserMacro(UserInfo info){
-        ArrayList<UserInfo> macros = loadUserMacro();
+        ArrayList<UserInfo> macros = null;
+        try{
+            macros = loadUserMacro();
+            if (macros == null) {
+                macros = new ArrayList<>();
+            }
+        } catch (Exception e) {
+            macros = new ArrayList<>();
+        }
+        for (UserInfo user : macros){
+            if (user.getUsername().equals(info.getUsername())){
+                return;
+            }
+        }
         macros.add(info);
         saveUserMacro(macros);
+
     }
 
-    public static User loadUser(String username, String password){
+    public static StandardUser loadStandardUser(String username, String password){
         String path = getUserDataPath();
         String json = "";
         try {
@@ -121,7 +135,23 @@ public class IOManager {
             System.out.println("User " + username + " does not exist");
         }
         Gson gson = new Gson();
-        User user = gson.fromJson(json, User.class);
+        StandardUser user = gson.fromJson(json, StandardUser.class);
+        if (!user.attemptLogin(password)){
+            return null;
+        }
+        return user;
+    }
+
+    public static Admin loadAdmin(String password){
+        String path = getUserDataPath();
+        String json = "";
+        try {
+            json = Files.readString(Paths.get(path + "admin.json"));
+        } catch (IOException e) {
+            System.out.println("Admin does not exist");
+        }
+        Gson gson = new Gson();
+        Admin user = gson.fromJson(json, Admin.class);
         if (!user.attemptLogin(password)){
             return null;
         }
@@ -154,8 +184,5 @@ public class IOManager {
         saveUser(me);
         saveUser(shivu);
 
-        User user1 = loadUser("spierob2", "hereismypassword");
-        User user2 = loadUser("spierob2", "wrongpassword");
-        ArrayList<UserInfo> loaded = loadUserMacro();
     }
 }

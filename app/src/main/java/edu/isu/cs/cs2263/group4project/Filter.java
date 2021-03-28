@@ -1,33 +1,39 @@
 package edu.isu.cs.cs2263.group4project;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class Filter {
-    public List filterTag(List list){
-        //filter list to include only a certain tag
-        return list;
+
+    public ArrayList<Task> getListElements(List list){
+        ArrayList<Task> listElements = new ArrayList<>();
+        for (Section section : list.getSections()) {
+            for (Task task : section.getTasks()) {
+                listElements.add(task);
+                listElements.addAll(task.getSubTasks());
+            }
+        }
+        return listElements;
     }
 
-    public List filterPriority(List list){
-        //filter list to include only a certain priority
-        return list;
-    }
-
-    public List filterDate(List list){
-        //filter list to include only a certain due date
-        return list;
-    }
-
-    public List sortByTag(List list){
+    public ArrayList<Task> sortByLabel(List list){
         //sort list by tag
-        return list;
+        ArrayList<Task> tasks = getListElements(list);
+        Collections.sort(tasks, new ComparatorLabel());
+        return tasks;
     }
 
-    public List sortByPriority(List list){
+    public ArrayList<Object> sortByPriority(List list){
         //sort list by priority
-        return list;
+        ArrayList<Task> tasks = getListElements(list);
+        Collections.sort(tasks, new ComparatorPriority());
+        return null;
     }
 
-    public List sortByDate(List list){
+    public ArrayList<Object> sortByDate(List list){
         //sort list by due date
-        return list;
+        ArrayList<Task> tasks = getListElements(list);
+        Collections.sort(tasks, new ComparatorDate());
+        return null;
     }
 }

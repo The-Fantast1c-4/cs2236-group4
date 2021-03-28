@@ -61,6 +61,14 @@ public class Task {
         this.dueDate = dueDate;
     }
 
+    public ArrayList<SubTask> getSubTasks(){
+        return subTasks;
+    }
+
+    public ArrayList<String> getLabels(){
+        return labels;
+    }
+
     public boolean isComplete() {
         return complete;
     }

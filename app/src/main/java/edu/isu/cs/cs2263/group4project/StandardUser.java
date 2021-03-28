@@ -7,6 +7,12 @@ public class StandardUser extends User{
     public StandardUser(UserInfo info) {
         super(info);
         lists = new UserLists();
+        IOManager.saveUser(this);
+        IOManager.saveUserMacro(info);
+    }
+
+    public UserLists getLists(){
+        return lists;
     }
 
 
