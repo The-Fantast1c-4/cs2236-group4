@@ -24,5 +24,10 @@ public class DatabaseTests {
 
         myLists.getList("CS Project").getSection("Default Section").addTask("Write searching code", 10, "Need to write the searching code");
         myLists.getList("CS Project").getSection("Default Section").getTask("Write searching code").addSubTask("Use cases", 5, "write the use cases");
+
+        Task currentTask = myLists.getList("CS Project").getSection("Default Section").getTask("Write searching code");
+        SearchingVisitor v = new SearchingVisitor("search");
+        myLists.accept(v);
+        ArrayList<Object> matches = v.getMatches();
     }
 }

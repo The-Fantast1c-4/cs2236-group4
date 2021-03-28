@@ -56,6 +56,10 @@ public class UserLists {
         return null;
     }
 
+    public void accept(Visitor v){
+        v.visit(this);
+    }
+
 
 
 
