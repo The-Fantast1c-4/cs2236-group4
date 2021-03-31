@@ -33,7 +33,7 @@ public class App extends Application {
     }
     public static void setState(UIState state){
         App.state = state;
-
+        App.state.run();
     }
 
     public static UIState getState() {

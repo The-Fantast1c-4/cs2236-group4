@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 import java.io.File;
 
 public class ChangeSettingsState implements UIState {
-    Stage stage;
+    private Stage stage;
     public ChangeSettingsState(Stage stage) {
         this.stage=stage;
     }
@@ -69,17 +69,17 @@ public class ChangeSettingsState implements UIState {
         top.getChildren().addAll(log, store);
         store.getChildren().addAll(sULabel,storeUSer);
         log.getChildren().addAll(logLocation,defaultLL);
+        //style nodes
+        backB.setStyle("-fx-background-color: #e48257;");
+        saveB.setStyle("-fx-background-color: #e48257;");
+        main.setStyle("-fx-background-color: #f2edd7;");
 
         //set scene
-        Scene scene = new Scene(main);
+        Scene scene = new Scene(main,1000,600);
         // load the stylesheet
-        scene.getStylesheets().add("stylesheet.css");
         stage.setScene(scene);
         stage.show();
     }
 
-    @Override
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
+
 }

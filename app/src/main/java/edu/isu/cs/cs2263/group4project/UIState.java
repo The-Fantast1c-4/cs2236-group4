@@ -6,5 +6,4 @@ import javafx.stage.Stage;
 public interface UIState {
     void handle(Object event);
     void run();
-    void setStage(Stage stage);
 }

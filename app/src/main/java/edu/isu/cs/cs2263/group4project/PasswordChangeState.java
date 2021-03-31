@@ -13,7 +13,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class PasswordChangeState implements UIState  {
-    Stage stage;
+    private Stage stage;
     public PasswordChangeState(Stage stage) {
         this.stage = stage;
     }
@@ -70,9 +70,6 @@ public class PasswordChangeState implements UIState  {
     }
 
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
 
 }
 

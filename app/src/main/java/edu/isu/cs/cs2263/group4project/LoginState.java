@@ -37,7 +37,6 @@ public class LoginState implements UIState {
         Button signUp = new Button("Sign up");
         signUp.setOnMouseClicked(value->{
             App.setState(new SignUpState(stage));
-            App.getState().run();
         });
         TextField userName = new TextField();
         PasswordField passwordField = new PasswordField();
@@ -72,8 +71,6 @@ public class LoginState implements UIState {
         stage.show();
     }
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
+
 }
 

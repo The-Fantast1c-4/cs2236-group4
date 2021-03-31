@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class SignUpState implements UIState {
-    Stage stage;
+    private Stage stage;
     public SignUpState(Stage stage) {
         this.stage=stage;
     }
@@ -36,7 +36,6 @@ public class SignUpState implements UIState {
         Button back = new Button("Back to Login Page");
         back.setOnMouseClicked(value->{
             App.setState(new LoginState(stage));
-            App.getState().run();
         });
         Button signUp = new Button("Sign up");
         TextField userName = new TextField();
@@ -92,9 +91,6 @@ public class SignUpState implements UIState {
         stage.show();
     }
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
 }
 
 
