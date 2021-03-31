@@ -1,7 +1,10 @@
 package edu.isu.cs.cs2263.group4project;
 
 
-public interface UiInterface {
+import javafx.stage.Stage;
+
+public interface UIState {
     void handle(Object event);
     void run();
+    void setStage(Stage stage);
 }
