@@ -29,7 +29,6 @@ public class LoginState implements UIState {
 
     public static void testState(Stage stage) {
         //create nodes
-        //LoginState.stage = primaryStage;
         stage.setTitle("Login");
         Button logIN = new Button("Log in");
         logIN.setOnMouseClicked(value->{

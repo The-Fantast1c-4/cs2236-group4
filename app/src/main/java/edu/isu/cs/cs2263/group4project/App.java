@@ -18,7 +18,7 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         // Here is where we put the call to our first state subclass
-        setState(new LoginState(primaryStage));
+        setState(new TaskPageState(primaryStage));
         state.run();
 
 
