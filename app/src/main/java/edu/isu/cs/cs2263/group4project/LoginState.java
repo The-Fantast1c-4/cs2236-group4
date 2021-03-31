@@ -2,6 +2,8 @@
 
 package edu.isu.cs.cs2263.group4project;
 
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -9,39 +11,42 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+
 public class LoginState implements UIState {
     public static Stage stage;
+
     public LoginState(Stage stage) {
         this.stage=stage;
     }
 
-
-    public void handle(Object event) {
-    }
 
     public void run() {
         testState(stage);
     }
 
 
+    public void handle(EventHandler event) {
+
+    }
+
     public static void testState(Stage stage) {
+        ArrayList<UserInfo> users = IOManager.loadUserMacro();
+
         //create nodes
         stage.setTitle("Login");
         Button logIN = new Button("Log in");
-        logIN.setOnMouseClicked(value->{
-            });
         Button signUp = new Button("Sign up");
-        signUp.setOnMouseClicked(value->{
-            App.setState(new SignUpState(stage));
-        });
-        TextField userName = new TextField();
+        TextField userName = new TextField("admin");
         PasswordField passwordField = new PasswordField();
         Label unLabel = new Label("User Name:");
         Label passLabel = new Label("Password:");
-        Label instructions = new Label("Dont have an accout?");
+        Label instructions = new Label("Don't have an account?");
+        Label wrong = new Label("Incorrect Username or Password");
 
         //create grid
         GridPane main = new GridPane();
@@ -63,12 +68,37 @@ public class LoginState implements UIState {
         logIN.setStyle("-fx-background-color: #e48257;");
         signUp.setStyle("-fx-background-color: #e48257;");
         main.setStyle("-fx-background-color: #f2edd7;");
+        wrong.setStyle("-fx-text-fill: red;");
 
         //set scene
         Scene scene = new Scene(main,1000,600);
         stage.setScene(scene);
         stage.show();
+
+        EventHandler<MouseEvent> handler = new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent event) {
+                if (event.getSource()==signUp){
+                    App.setState(new SignUpState(stage));
+                }
+                if (event.getSource()==logIN){
+                    String un = userName.getText();
+                    String ps = passwordField.getText();
+                    for(UserInfo user : users){
+                        StandardUser tempUser = new StandardUser(user);
+                        System.out.println(un);
+                        System.out.println(tempUser.getUserInfo().getUsername());
+                        if (tempUser.getUserInfo().getUsername() == un){
+                            System.out.println("yes "+"\n"+tempUser.attemptLogin(ps));
+                        }else{System.out.println(tempUser.getUserInfo().getUsername()+" != "+un);}
+                    }
+                    main.add(wrong ,1,3);
+                }
+            }
+        };
+        signUp.setOnMouseClicked(handler);
+        logIN.setOnMouseClicked(handler);
     }
+
 
 
 }

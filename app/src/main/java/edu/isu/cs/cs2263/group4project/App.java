@@ -8,8 +8,12 @@ import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+import java.util.PrimitiveIterator;
+
 public class App extends Application {
     private static UIState state;
+
     public static void main(String[] args) {
         Application.launch(args);
     }
@@ -18,9 +22,8 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         // Here is where we put the call to our first state subclass
-        setState(new TaskPageState(primaryStage));
+        setState(new LoginState(primaryStage));
         state.run();
-
 
 
     }

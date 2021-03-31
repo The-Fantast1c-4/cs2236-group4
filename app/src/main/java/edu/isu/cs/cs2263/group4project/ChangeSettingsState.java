@@ -1,6 +1,7 @@
 package edu.isu.cs.cs2263.group4project;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -20,7 +21,7 @@ public class ChangeSettingsState implements UIState {
     }
 
 
-    public void handle(Object event) {
+    public void handle(EventHandler event) {
     }
 
     public void run() {

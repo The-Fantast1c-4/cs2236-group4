@@ -9,6 +9,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -20,7 +21,7 @@ public class SignUpState implements UIState {
         this.stage=stage;
     }
 
-    public void handle(Object event) {
+    public void handle(EventHandler event) {
 
     }
 
@@ -34,9 +35,6 @@ public class SignUpState implements UIState {
         //Creating nodes to put in Grid pane
         stage.setTitle("Sign Up");
         Button back = new Button("Back to Login Page");
-        back.setOnMouseClicked(value->{
-            App.setState(new LoginState(stage));
-        });
         Button signUp = new Button("Sign up");
         TextField userName = new TextField();
         userName.setPromptText("User Name");
@@ -89,6 +87,17 @@ public class SignUpState implements UIState {
         Scene scene = new Scene(gridPane, 1000,600);
         stage.setScene(scene);
         stage.show();
+
+        EventHandler<MouseEvent> handler = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(event.getSource()==back){
+                    App.setState(new LoginState(stage));
+                }
+            }
+        };
+
+        back.setOnMouseClicked(handler);
     }
 
 }

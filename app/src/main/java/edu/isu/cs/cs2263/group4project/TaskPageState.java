@@ -2,6 +2,7 @@ package edu.isu.cs.cs2263.group4project;
 
 import com.google.common.collect.ForwardingTable;
 import com.google.common.collect.Table;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -18,7 +19,7 @@ public class TaskPageState implements UIState{
         this.stage = stage;
     }
 
-    public void handle(Object event) {
+    public void handle(EventHandler event) {
 
     }
 
