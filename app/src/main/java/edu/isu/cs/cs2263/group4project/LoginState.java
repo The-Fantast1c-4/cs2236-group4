@@ -2,7 +2,6 @@
 
 package edu.isu.cs.cs2263.group4project;
 
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -13,29 +12,33 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-public class LoginState extends Application implements UiInterface {
-    public LoginState() {
+public class LoginState implements UIState {
+    public static Stage stage;
+    public LoginState(Stage stage) {
+        this.stage=stage;
     }
 
-    public static void main(String[] args) {
-        Application.launch(args);
-    }
 
     public void handle(Object event) {
     }
 
     public void run() {
+        testState(stage);
     }
 
-    public void start(Stage primaryStage) throws Exception {
-        this.testState(primaryStage);
-    }
 
-    public void testState(Stage stage) {
+    public static void testState(Stage stage) {
         //create nodes
+        //LoginState.stage = primaryStage;
         stage.setTitle("Login");
         Button logIN = new Button("Log in");
+        logIN.setOnMouseClicked(value->{
+            });
         Button signUp = new Button("Sign up");
+        signUp.setOnMouseClicked(value->{
+            App.setState(new SignUpState(stage));
+            App.getState().run();
+        });
         TextField userName = new TextField();
         PasswordField passwordField = new PasswordField();
         Label unLabel = new Label("User Name:");
@@ -64,9 +67,13 @@ public class LoginState extends Application implements UiInterface {
         main.setStyle("-fx-background-color: #f2edd7;");
 
         //set scene
-        Scene scene = new Scene(main);
+        Scene scene = new Scene(main,1000,600);
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 }
 

@@ -9,15 +9,20 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class App extends Application {
-
+    private static UIState state;
     public static void main(String[] args) {
         Application.launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
         // Here is where we put the call to our first state subclass
-        testState(primaryStage);
+        setState(new LoginState(primaryStage));
+        state.run();
+
+
+
     }
 
     public void testState(Stage stage){
@@ -25,5 +30,13 @@ public class App extends Application {
         stage.setTitle("Test Layout");
         stage.setScene(scene);
         stage.show();
+    }
+    public static void setState(UIState state){
+        App.state = state;
+
+    }
+
+    public static UIState getState() {
+        return state;
     }
 }

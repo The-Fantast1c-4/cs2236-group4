@@ -12,23 +12,19 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-public class PasswordChange  {
-    public PasswordChange() {
-    }
-    //main method
-    public static void main(String[] args) {
-        Application.launch(args);
+public class PasswordChangeState implements UIState  {
+    Stage stage;
+    public PasswordChangeState(Stage stage) {
+        this.stage = stage;
     }
 
     public void handle(Object event) {
     }
 
     public void run() {
+        testState(stage);
     }
 
-    public void start(Stage primaryStage) throws Exception {
-        this.testState(primaryStage);
-    }
 
     public void testState(Stage stage) {
         //creating child nodes
@@ -68,9 +64,15 @@ public class PasswordChange  {
         gridPane.setStyle("-fx-background-color: #f2edd7;");
 
         //adding layout to the scene
-        Scene scene = new Scene(gridPane);
+        Scene scene = new Scene(gridPane,1000,600);
         stage.setScene(scene);
         stage.show();
     }
+
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
 }
 

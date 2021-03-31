@@ -13,23 +13,21 @@ import javafx.stage.Stage;
 
 import java.io.File;
 
-public class ChangeSettingsState extends Application implements UiInterface {
-    public ChangeSettingsState() {
+public class ChangeSettingsState implements UIState {
+    Stage stage;
+    public ChangeSettingsState(Stage stage) {
+        this.stage=stage;
     }
 
-    public static void main(String[] args) {
-        Application.launch(args);
-    }
 
     public void handle(Object event) {
     }
 
     public void run() {
+        this.testState(stage);
     }
 
-    public void start(Stage primaryStage) throws Exception {
-        this.testState(primaryStage);
-    }
+
 
     public void testState(Stage stage) {
         //create nodes
@@ -78,5 +76,10 @@ public class ChangeSettingsState extends Application implements UiInterface {
         scene.getStylesheets().add("stylesheet.css");
         stage.setScene(scene);
         stage.show();
+    }
+
+    @Override
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 }

@@ -14,30 +14,30 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class SignUp extends Application implements UiInterface {
-    public SignUp() {
-    }
-
-    public static void main(String[] args) {
-        Application.launch(args);
+public class SignUpState implements UIState {
+    Stage stage;
+    public SignUpState(Stage stage) {
+        this.stage=stage;
     }
 
     public void handle(Object event) {
 
-
     }
 
     public void run() {
+        testState(stage);
     }
 
-    public void start(Stage primaryStage) throws Exception {
-        this.testState(primaryStage);
-    }
+
 
     public void testState(Stage stage) {
         //Creating nodes to put in Grid pane
         stage.setTitle("Sign Up");
         Button back = new Button("Back to Login Page");
+        back.setOnMouseClicked(value->{
+            App.setState(new LoginState(stage));
+            App.getState().run();
+        });
         Button signUp = new Button("Sign up");
         TextField userName = new TextField();
         userName.setPromptText("User Name");
@@ -87,9 +87,13 @@ public class SignUp extends Application implements UiInterface {
         gridPane.setStyle("-fx-background-color: #f2edd7;");
 
         //setting scene
-        Scene scene = new Scene(gridPane);
+        Scene scene = new Scene(gridPane, 1000,600);
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 }
 
