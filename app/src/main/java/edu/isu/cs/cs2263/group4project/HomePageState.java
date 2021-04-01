@@ -43,6 +43,7 @@ public class HomePageState implements UIState {
 
         //Listview for lists
         ObservableList<List> userLists = FXCollections.observableArrayList(App.getUser().getLists().getLists());
+        System.out.println(App.getUser().getLists().getList(0).getName());
         ListView<List> lists = new ListView<>(userLists);
         lists.setPrefWidth(600);
         lists.setPrefHeight(800);
@@ -121,6 +122,7 @@ public class HomePageState implements UIState {
                                 String sName = name.getText();
                                 String sDescription = description.getText();
                                 App.getUser().getLists().makeList(sName,sDescription);
+                                IOManager.saveUser(App.getUser());
                                 lists.getItems().add(App.getUser().getLists().getList(sName));
                                 newList.close();
                             }
