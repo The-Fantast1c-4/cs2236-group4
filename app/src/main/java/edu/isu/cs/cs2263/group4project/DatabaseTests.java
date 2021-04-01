@@ -22,6 +22,9 @@ public class DatabaseTests {
         myLists.makeList("CS Project", "This is for our CS2263 semester project");
         IOManager.saveUser(user1);
 
+        StandardUser user2 = IOManager.loadStandardUser("spierob2", "hereismypassword");
+        UserLists myLists2 = user2.getLists();
+
         myLists.getList("CS Project").getSection("Default Section").addTask("Write searching code", 10, "Need to write the searching code");
         myLists.getList("CS Project").getSection("Default Section").getTask("Write searching code").addSubTask("Use cases", 5, "write the use cases");
 
