@@ -83,18 +83,28 @@ public class LoginState implements UIState {
                 if (event.getSource()==logIN){
                     String un = userName.getText();
                     String ps = passwordField.getText();
-                    for(UserInfo user : users){
-                        if (user.getUsername().equals(un)){
-                            System.out.println("Username correct");
-                            StandardUser tempUser = new StandardUser(user);
-                            if(tempUser.attemptLogin(ps)){
-                                App.setUser(tempUser);
-                                System.out.println("login sucessfull");
-                                App.setState(new HomePageState(stage));
-                            }
+
+                    if (un.equals("admin")) {
+                        Admin user = IOManager.loadAdmin(ps);
+                        if (user == null) {
+                            System.out.println("Login failed");
+                        } else {
+                            System.out.println("Login Successful");
+                            //App.setUser(user);            // You need to have a way to set the current user to be the admin or something
+                            App.setState(new ChangeSettingsState(stage));
                         }
+
                     }
-                    main.add(wrong ,1,3);
+
+                    StandardUser user = IOManager.loadStandardUser(un, ps);
+                    if (user == null){
+                        System.out.println("Login failed");
+                    } else {
+                        System.out.println("Login Successful");
+                        App.setUser(user);
+                        App.setState(new HomePageState(stage));
+                    }
+                    main.add(wrong ,1,3);       // I have no idea what this line of code does so you have to handle this yourself
                 }
             }
         };

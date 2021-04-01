@@ -16,6 +16,8 @@ public class List {
         addSection("Default Section");
     }
 //getter methods
+    public String toString() {return name;}
+
     public String getName() {
         return name;
     }
