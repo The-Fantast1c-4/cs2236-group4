@@ -13,7 +13,7 @@ import java.util.PrimitiveIterator;
 
 public class App extends Application {
     private static UIState state;
-
+    private static StandardUser user;
     public static void main(String[] args) {
         Application.launch(args);
     }
@@ -41,5 +41,13 @@ public class App extends Application {
 
     public static UIState getState() {
         return state;
+    }
+
+    public static void setUser(StandardUser user) {
+        App.user = user;
+    }
+
+    public static StandardUser getUser() {
+        return user;
     }
 }

@@ -41,7 +41,7 @@ public class LoginState implements UIState {
         stage.setTitle("Login");
         Button logIN = new Button("Log in");
         Button signUp = new Button("Sign up");
-        TextField userName = new TextField("admin");
+        TextField userName = new TextField("mistryman");
         PasswordField passwordField = new PasswordField();
         Label unLabel = new Label("User Name:");
         Label passLabel = new Label("Password:");
@@ -84,12 +84,15 @@ public class LoginState implements UIState {
                     String un = userName.getText();
                     String ps = passwordField.getText();
                     for(UserInfo user : users){
-                        StandardUser tempUser = new StandardUser(user);
-                        System.out.println(un);
-                        System.out.println(tempUser.getUserInfo().getUsername());
-                        if (tempUser.getUserInfo().getUsername() == un){
-                            System.out.println("yes "+"\n"+tempUser.attemptLogin(ps));
-                        }else{System.out.println(tempUser.getUserInfo().getUsername()+" != "+un);}
+                        if (user.getUsername().equals(un)){
+                            System.out.println("Username correct");
+                            StandardUser tempUser = new StandardUser(user);
+                            if(tempUser.attemptLogin(ps)){
+                                App.setUser(tempUser);
+                                System.out.println("login sucessfull");
+                                App.setState(new HomePageState(stage));
+                            }
+                        }
                     }
                     main.add(wrong ,1,3);
                 }

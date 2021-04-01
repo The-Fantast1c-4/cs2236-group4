@@ -12,6 +12,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+
 public class TaskPageState implements UIState{
     private Stage stage;
 
@@ -103,6 +105,10 @@ public class TaskPageState implements UIState{
         subLists.setMaxSize(100000,200);
         topButtonBar.setSpacing(2);
         bottomButtonBar.setSpacing(10);
+        //fill info
+        for(Task userTask : App.getUser().getLists().getList(0).getSection(0).getTasks()){
+            tasks.getItems().add(userTask);
+        }
         //style nodes
         back.setStyle("-fx-background-color: #e48257");
         logOut.setStyle("-fx-background-color: #e48257");

@@ -55,6 +55,9 @@ public class UserLists {
         }
         return null;
     }
+    public List getList(int listNum){
+        return lists.get(listNum);
+    }
 
     public void accept(Visitor v){
         v.visit(this);

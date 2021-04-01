@@ -54,6 +54,10 @@ public class List {
         }
         return null;
     }
+    public Section getSection(int secNum){
+        return sections.get(secNum);
+    }
+
     public void Archive(){
         this.isArchived = true;
     }

@@ -1,12 +1,21 @@
 package edu.isu.cs.cs2263.group4project;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
 
 public class HomePageState implements UIState {
     private Stage stage;
@@ -33,10 +42,11 @@ public class HomePageState implements UIState {
         search.setPromptText("Search here");
 
         //Listview for lists
-        ListView<List> lists = new ListView<List>();
-        listView.setPrefWidth(600);
-        listView.setPrefHeight(800);
-        listView.setStyle("-fx-control-inner-background: #3a635156;");
+        ObservableList<List> userLists = FXCollections.observableArrayList(App.getUser().getLists().getLists());
+        ListView<List> lists = new ListView<>(userLists);
+        lists.setPrefWidth(600);
+        lists.setPrefHeight(800);
+        lists.setStyle("-fx-control-inner-background: #3a635156;");
 
 
 
@@ -54,7 +64,8 @@ public class HomePageState implements UIState {
         gridPane.add(searchBtn, 3/2, 0);
         gridPane.add(viewArchived, 2, 3);
         gridPane.add(logOut, 3, 0);
-        gridPane.add(listView, 0, 1);
+        gridPane.add(lists, 0, 1);
+
 
 
         viewArchived.setStyle("-fx-background-color: #e48257;");
@@ -68,5 +79,61 @@ public class HomePageState implements UIState {
         Scene scene = new Scene(gridPane,1000,600);
         stage.setScene(scene);
         stage.show();
+
+        EventHandler<MouseEvent> handler = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(event.getSource()==makeNewList) {
+                    Stage newList = new Stage();
+                    newList.setTitle("New List");
+                    //create nodes
+                    TextField name = new TextField();
+                    name.setPromptText("Name");
+                    TextField description = new TextField();
+                    description.setPromptText("Description");
+                    Button save = new Button("Save");
+                    Button cancel = new Button("Cancel");
+
+                    //create containers
+                    HBox buttonBox = new HBox();
+                    VBox main = new VBox();
+
+                    //fill containers
+                    buttonBox.getChildren().addAll(save,cancel);
+                    main.getChildren().addAll(name,description,buttonBox);
+
+
+                    newList.setX(stage.getX() + (stage.getWidth() / 2) - 200);
+                    newList.setY(stage.getY() + (stage.getHeight() / 2) - 150);
+                    newList.setWidth(400);
+                    newList.setHeight(300);
+
+                    newList.setScene(new Scene(main));
+                    newList.show();
+
+                    EventHandler<MouseEvent> handler1 = new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+                            if(event.getSource()==cancel){
+                                newList.close();
+                            }
+                            if(event.getSource()==save||(name.getText()!="")){
+                                String sName = name.getText();
+                                String sDescription = description.getText();
+                                App.getUser().getLists().makeList(sName,sDescription);
+                                lists.getItems().add(App.getUser().getLists().getList(sName));
+                                newList.close();
+                            }
+
+                        }
+                    };
+                    cancel.setOnMouseClicked(handler1);
+                    save.setOnMouseClicked(handler1);
+                }
+            }
+        };
+        makeNewList.setOnMouseClicked(handler);
+        }
+
     }
-}
+
