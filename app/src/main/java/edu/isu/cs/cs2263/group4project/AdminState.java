@@ -40,7 +40,7 @@ public class AdminState{
         users.setStyle("-fx-control-inner-background: #3a635156;");
 
 
-        //creating a grid pane
+        //creating a grid 
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(20.0D, 20.0D, 20.0D, 20.0D));
         gridPane.setVgap(30.0D);
