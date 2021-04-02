@@ -136,10 +136,14 @@ public class HomePageState implements UIState {
                     App.setUser(null);
                     App.setState(new LoginState(stage));
                 }
+                if(event.getSource()==lists){
+                    App.setState(new TaskPageState(stage,lists.getFocusModel().getFocusedItem().getName()));
+                }
             }
         };
         makeNewList.setOnMouseClicked(handler);
         logOut.setOnMouseClicked(handler);
+        lists.setOnMouseClicked(handler);
         }
 
     }

@@ -2,12 +2,15 @@ package edu.isu.cs.cs2263.group4project;
 
 import com.google.common.collect.ForwardingTable;
 import com.google.common.collect.Table;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -16,8 +19,10 @@ import java.util.ArrayList;
 
 public class TaskPageState implements UIState{
     private Stage stage;
+    private List list;
 
-    public TaskPageState(Stage stage) {
+    public TaskPageState(Stage stage,String list) {
+        this.list = App.getUser().getLists().getList(list);
         this.stage = stage;
     }
 
@@ -29,7 +34,7 @@ public class TaskPageState implements UIState{
         testState(stage);
     }
     public void testState(Stage stage){
-        stage.setTitle("List Name Here");
+        stage.setTitle(list.getName());
         //create nodes
         Label searchLabel = new Label("Search");
         TextField searchBar = new TextField();
@@ -44,11 +49,19 @@ public class TaskPageState implements UIState{
 
         Label section = new Label("Default");
         //table
+
         TableView<Task> tasks = new TableView();
         TableColumn<Task, String> taskColumn = new TableColumn<>("Task");
         taskColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         tasks.getColumns().add(taskColumn);
         tasks.getItems().add(new Task("task",2,""));
+        for(Section listSection : FXCollections.observableArrayList(list.getSections())){
+            for(Task sectionTask : FXCollections.observableArrayList(listSection.getTasks())){
+                tasks.getItems().add(sectionTask);
+            }
+
+        }
+
 
         ComboBox comments = new ComboBox();
         comments.getItems().addAll("Comments");
@@ -135,7 +148,23 @@ public class TaskPageState implements UIState{
         stage.setScene(scene);
         stage.show();
 
-
+        EventHandler<MouseEvent> handler = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(event.getSource()==back){
+                    App.setState(new HomePageState(stage));
+                }
+                if(event.getSource()==logOut){
+                    App.setUser(null);
+                    App.setState(new LoginState(stage));
+                }
+                if(event.getSource()== makeTask){
+                    
+                }
+            }
+        };
+        back.setOnMouseClicked(handler);
+        logOut.setOnMouseClicked(handler);
     }
 
 
