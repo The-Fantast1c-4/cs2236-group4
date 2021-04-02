@@ -44,8 +44,6 @@ public class HomePageState implements UIState {
         //Listview for lists
         ObservableList<List> userLists = FXCollections.observableArrayList(App.getUser().getLists().getLists());
 
-        // Todo: you need to handle the case when userLists is null, that is, the user hasn't defined any lists yet
-        System.out.println(App.getUser().getLists().getList(0).getName());
         ListView<List> lists = new ListView<>(userLists);
         lists.setPrefWidth(600);
         lists.setPrefHeight(800);
@@ -134,9 +132,14 @@ public class HomePageState implements UIState {
                     cancel.setOnMouseClicked(handler1);
                     save.setOnMouseClicked(handler1);
                 }
+                if(event.getSource()==logOut){
+                    App.setUser(null);
+                    App.setState(new LoginState(stage));
+                }
             }
         };
         makeNewList.setOnMouseClicked(handler);
+        logOut.setOnMouseClicked(handler);
         }
 
     }

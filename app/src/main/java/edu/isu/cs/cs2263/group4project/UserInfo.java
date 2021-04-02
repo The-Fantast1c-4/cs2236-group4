@@ -30,6 +30,10 @@ public class UserInfo {
     public String getEmail(){return email;}
     public String getPathToPicture(){return pathToPicture;}
 
+    public void setPathToPicture(String pathToPicture){this.pathToPicture=pathToPicture;}
+    public void setBiography(String biography) {this.biography = biography;}
+
+
     private byte[] hashPassword(String password){
         // Hash the password here
 

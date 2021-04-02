@@ -22,6 +22,7 @@ public class Command {
             String pathToPic = "path";
             UserInfo info = new UserInfo(username, firstName, lastName, bio, email, pathToPic, password);
             StandardUser user = new StandardUser(info);
+
         }
     }
 

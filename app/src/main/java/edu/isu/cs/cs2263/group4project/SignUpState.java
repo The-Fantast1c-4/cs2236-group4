@@ -55,6 +55,8 @@ public class SignUpState implements UIState {
         biography.setPromptText("Biography");
         biography.setPrefSize(50,100);
         Label bio = new Label("Tell us about yourself");
+        Label badUserName = new Label("Your User Name is already taken");
+        Label passwordsDontMatch = new Label("Your Passwords don't match");
 
 
         GridPane gridPane = new GridPane();
@@ -82,6 +84,8 @@ public class SignUpState implements UIState {
         back.setStyle("-fx-background-color: #e48257;");
         signUp.setStyle("-fx-background-color: #e48257;");
         gridPane.setStyle("-fx-background-color: #f2edd7;");
+        badUserName.setStyle("-fx-text-fill: red;");
+        passwordsDontMatch.setStyle("-fx-text-fill: red;");
 
         //setting scene
         Scene scene = new Scene(gridPane, 1000,600);
@@ -94,9 +98,38 @@ public class SignUpState implements UIState {
                 if(event.getSource()==back){
                     App.setState(new LoginState(stage));
                 }
+                if(event.getSource()==signUp){
+                    String uName = userName.getText();
+                    String fName = firstName.getText();
+                    String lName = lastName.getText();
+                    String eMail = email.getText();
+                    String firstPassword = passwordField.getText();
+                    String confirmPassword = passwordConfirm.getText();
+                    if (firstPassword.equals(confirmPassword)){
+                        boolean usernameExists = false;
+                        for (UserInfo user : IOManager.loadUserMacro()){
+                            if (user.getUsername().equals(uName)){
+                                usernameExists = true;
+                                break;
+                            }
+                        }
+
+                        if (!usernameExists) {
+                            // Here you must ask the user for a bio and path to picture
+                            String bio = biography.getText();
+                            String pathToPic = "";
+                            UserInfo info = new UserInfo(uName, fName, lName, bio, eMail, pathToPic, firstPassword);
+                            StandardUser user = new StandardUser(info);
+                            //IOManager.saveUser(user);
+                            App.setState(new LoginState(stage));
+
+                        }else {gridPane.add(badUserName,1,8);}
+                    }else  {gridPane.add(passwordsDontMatch,1,9);}
+
+                }
             }
         };
-
+        signUp.setOnMouseClicked(handler);
         back.setOnMouseClicked(handler);
     }
 
