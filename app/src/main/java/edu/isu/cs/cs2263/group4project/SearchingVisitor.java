@@ -4,14 +4,18 @@ import java.util.ArrayList;
 
 public class SearchingVisitor implements Visitor{
     private String searchTerm;
-    private ArrayList<Object> matches = new ArrayList<>();
+    private ArrayList<List> listMatches = new ArrayList<>();
+    private ArrayList<Task> taskMatches = new ArrayList<>();
 
     public SearchingVisitor(String searchTerm){
         this.searchTerm = searchTerm;
     }
 
-    public ArrayList<Object> getMatches(){
-        return matches;
+    public ArrayList<List> getListMatches(){
+        return listMatches;
+    }
+    public ArrayList<Task> getTaskMatches() {
+        return taskMatches;
     }
 
     public void visit(UserLists lists) {
@@ -42,7 +46,7 @@ public class SearchingVisitor implements Visitor{
             }
         }
         if (listContainsTerm) {
-            matches.add(list);
+            listMatches.add(list);
         }
     }
 
@@ -69,7 +73,7 @@ public class SearchingVisitor implements Visitor{
             }
         }
         if (taskContainsTerm) {
-            matches.add(task);
+            taskMatches.add(task);
         }
 
         for (SubTask subtask : task.getSubTasks()){
@@ -78,9 +82,5 @@ public class SearchingVisitor implements Visitor{
     }
 
     public void visit(Comment comment){
-        // If this comment contains the searchTerm, return true
-        if (comment.getComment().contains(searchTerm)) {
-            matches.add(comment);
-        }
     }
 }

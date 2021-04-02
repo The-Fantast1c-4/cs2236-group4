@@ -36,6 +36,16 @@ public class Section {
         }
         return null;
     }
+    public ArrayList<Task> getCompletedTasks(){
+        ArrayList<Task> completed = new ArrayList<>();
+        for (Task task : tasks){
+            if (task.isComplete()){
+                completed.add(task);
+            }
+        }
+        return completed;
+    }
+
     public void addTask(Task task){
         //creates task
         tasks.add(task);
@@ -83,6 +93,10 @@ public class Section {
         Section targetSection = list.getSection("Default Section");
         targetSection.addTask(task);
         deleteTask(task);
+    }
+
+    public Task cloneTask(Task task){
+        return task.clone();
     }
 
     public void accept(Visitor v){
