@@ -80,7 +80,7 @@ public class LoginState implements UIState {
                 if (event.getSource()==signUp){
                     App.setState(new SignUpState(stage));
                 }
-                if (event.getSource()==logIN){
+                if (event.getSource()==logIN) {
                     String un = userName.getText();
                     String ps = passwordField.getText();
 
@@ -91,22 +91,23 @@ public class LoginState implements UIState {
                         } else {
                             System.out.println("Login Successful");
                             //App.setUser(user);            // You need to have a way to set the current user to be the admin or something
-                            App.setState(new ChangeSettingsState(stage));
+                            App.setState(new AdminState(stage));
                         }
 
-                    }
-
-                    StandardUser user = IOManager.loadStandardUser(un, ps);
-                    if (user == null){
-                        System.out.println("Login failed");
                     } else {
-                        System.out.println("Login Successful");
-                        App.setUser(user);
-                        App.setState(new HomePageState(stage));
+
+                        StandardUser user = IOManager.loadStandardUser(un, ps);
+                        if (user == null) {
+                            System.out.println("Login failed");
+                        } else {
+                            System.out.println("Login Successful");
+                            App.setUser(user);
+                            App.setState(new HomePageState(stage));
+                        }
+                        main.add(wrong, 1, 3);       // I have no idea what this line of code does so you have to handle this yourself
                     }
-                    main.add(wrong ,1,3);       // I have no idea what this line of code does so you have to handle this yourself
                 }
-            }
+                }
         };
         signUp.setOnMouseClicked(handler);
         logIN.setOnMouseClicked(handler);

@@ -10,7 +10,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-public class AdminState{
+public class AdminState implements UIState{
     private Stage stage;
     public AdminState(Stage stage) {
         this.stage=stage;
