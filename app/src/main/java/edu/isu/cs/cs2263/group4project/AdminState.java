@@ -6,9 +6,12 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
 
 public class AdminState implements UIState{
     private Stage stage;
@@ -33,11 +36,13 @@ public class AdminState implements UIState{
         name.setFont(new Font("Arial", 30));
 
         //Listview for users
-        ListView users = new ListView();
-        users.blendModeProperty();
-        users.setPrefWidth(800);
-        users.setPrefHeight(900);
-        users.setStyle("-fx-control-inner-background: #3a635156;");
+        Admin admin = IOManager.loadAdmin("admin");
+        ArrayList<UserInfo> users = admin.getAllUsers();
+        ListView<StandardUser> userlist= new ListView<StandardUser>();
+        userlist.blendModeProperty();
+        userlist.setPrefWidth(800);
+        userlist.setPrefHeight(900);
+        userlist.setStyle("-fx-control-inner-background: #3a635156;");
 
 
         //creating a grid 
@@ -49,7 +54,7 @@ public class AdminState implements UIState{
 
 
         gridPane.add(name,0,0);
-        gridPane.add(users,0,1);
+        gridPane.add(userlist,0,1);
         gridPane.add(changeSettingsBtn, 0, 4);
         gridPane.add(logOut, 2, 4);
 
@@ -63,5 +68,20 @@ public class AdminState implements UIState{
         Scene scene = new Scene(gridPane,1000,600);
         stage.setScene(scene);
         stage.show();
+        EventHandler<MouseEvent> handler = new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent event) {
+                if (event.getSource()==logOut){
+                    App.setState(new LoginState(stage));
+                }else { if (event.getSource() == changeSettingsBtn){
+                        App.setState(new ChangeSettingsState(stage));
+
+                    }
+                }
+            }
+        };
+        logOut.setOnMouseClicked(handler);
+        changeSettingsBtn.setOnMouseClicked(handler);
     }
+
 }
+

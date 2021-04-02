@@ -32,6 +32,7 @@ public class ChangeSettingsState implements UIState {
 
     public void testState(Stage stage) {
         //create nodes
+        stage.setTitle("Change Settings");
         Label logLocation = new Label("Log Location");
         Button defaultLL = new Button("Default");
         FileChooser browse = new FileChooser();
