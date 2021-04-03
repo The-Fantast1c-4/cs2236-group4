@@ -152,23 +152,40 @@ public class Command {
         // After doing this, you must call IOManager.saveUser(currentUser);
     }
 
-    public static void MarkComplete(){
+    public static void MarkComplete(Task currentTask){
+        currentTask.markComplete();
 
+        // To mark as incomplete, use the following code:
+        currentTask.markIncomplete();
+
+        // After doing either of these, you must call IOManager.saveUser(currentUser);
     }
 
-    public static void MakeSubTask(){
+    public static void MakeSubTask(Task currentTask, String taskName, int priority, String description) {
+        // There are two methods, you can either specify a date or it will automatically select a date for you
+        Date date = new Date();
+        currentTask.addSubTask(taskName, priority, description);
+        // Alternatively, if a date is specified then you can use the following method:
+        currentTask.addSubTask(taskName, priority, description, date);
 
+        // After doing either of these, you must call IOManager.saveUser(currentUser);
     }
 
 
 
     // _____________________ Commands for the list of lists ______________________________
-    public static void ViewArchivedLists(){
-
+    public static void ViewArchivedLists(UserLists lists){
+        ArrayList<List> archivedLists = lists.getArchivedLists();
     }
 
-    public static void MakeList(){
+    public static void ViewUnarchivedLists(UserLists lists){
+        ArrayList<List> archivedLists = lists.getNonArchivedLists();
+    }
 
+    public static void MakeList(UserLists lists, String name, String description){
+        lists.makeList(name, description);
+
+        // After doing either of these, you must call IOManager.saveUser(currentUser);
     }
 
     // ____________________ ETC. _______________________________

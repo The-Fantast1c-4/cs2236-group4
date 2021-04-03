@@ -73,6 +73,14 @@ public class Task {
         return complete;
     }
 
+    public void markComplete() {
+        complete = true;
+    }
+
+    public void markIncomplete() {
+        complete = false;
+    }
+
     public boolean isOverDue() {
         //returns true if overdue
         return dueDate.after(new Date());       // Date() constructor automatically sets the time to the current time
