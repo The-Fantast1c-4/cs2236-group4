@@ -1,6 +1,8 @@
 package edu.isu.cs.cs2263.group4project;
 
 
+import javafx.beans.Observable;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -38,14 +40,18 @@ public class AdminState implements UIState{
         //Listview for users
         Admin admin = IOManager.loadAdmin("admin");
         ArrayList<UserInfo> users = admin.getAllUsers();
-        ListView<StandardUser> userlist= new ListView<StandardUser>();
+        ListView userlist= new ListView();
+        for (int i = 0; i < users.size(); i++) {
+            userlist.getItems().add(users.get(i).getUsername());
+
+        }
         userlist.blendModeProperty();
         userlist.setPrefWidth(800);
         userlist.setPrefHeight(900);
         userlist.setStyle("-fx-control-inner-background: #3a635156;");
 
 
-        //creating a grid 
+        //creating a grid
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(20.0D, 20.0D, 20.0D, 20.0D));
         gridPane.setVgap(30.0D);
@@ -73,9 +79,9 @@ public class AdminState implements UIState{
                 if (event.getSource()==logOut){
                     App.setState(new LoginState(stage));
                 }else { if (event.getSource() == changeSettingsBtn){
-                        App.setState(new ChangeSettingsState(stage));
+                    App.setState(new ChangeSettingsState(stage));
 
-                    }
+                }
                 }
             }
         };
