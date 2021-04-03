@@ -87,6 +87,7 @@ public class AdminState implements UIState{
         };
         logOut.setOnMouseClicked(handler);
         changeSettingsBtn.setOnMouseClicked(handler);
+        
     }
 
 }
