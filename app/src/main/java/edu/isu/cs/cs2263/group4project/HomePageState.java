@@ -128,6 +128,7 @@ public class HomePageState implements UIState {
                                 App.getUser().getLists().makeList(sName,sDescription);
                                 IOManager.saveUser(App.getUser());
                                 lists.getItems().add(App.getUser().getLists().getList(sName));
+                                App.setState(new HomePageState(stage));
                                 newList.close();
                             }
 
