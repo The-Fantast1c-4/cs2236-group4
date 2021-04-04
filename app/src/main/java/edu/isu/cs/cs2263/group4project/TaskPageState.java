@@ -121,9 +121,7 @@ public class TaskPageState implements UIState{
         topButtonBar.setSpacing(2);
         bottomButtonBar.setSpacing(10);
         //fill info
-        for(Task userTask : App.getUser().getLists().getList(0).getSection(0).getTasks()){
-            tasks.getItems().add(userTask);
-        }
+
         //style nodes
         back.setStyle("-fx-background-color: #e48257");
         logOut.setStyle("-fx-background-color: #e48257");
