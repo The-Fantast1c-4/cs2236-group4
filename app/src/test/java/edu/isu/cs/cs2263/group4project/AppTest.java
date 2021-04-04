@@ -41,6 +41,24 @@ class AppTest {
         admin.changeUserPassword("mistryman", "hereishispassword");
         assertNotNull(IOManager.loadStandardUser("mistryman", "hereishispassword"));
 
-        // Test 3:
+    }
+
+    @Test
+    void filterTests() {
+        List list = new List("TestList", "List for testing");
+        Section def = list.getSection("Default Section");
+        def.addTask("Test 1", 4, "b");
+        def.addTask("Test 2", 2, "a");
+        def.addTask("Test 3", 7, "aa");
+
+        ArrayList<Task> sorted = Filter.sortBy(list, "priority");
+        assertEquals(def.getTask("Test 2"), sorted.get(0));
+
+        def.getTask("Test 1").addLabel("b");
+        def.getTask("Test 2").addLabel("a");
+        def.getTask("Test 3").addLabel("aa");
+
+        sorted = Filter.sortBy(list, "label");
+        assertEquals(def.getTask("Test 3"), sorted.get(1));
     }
 }
