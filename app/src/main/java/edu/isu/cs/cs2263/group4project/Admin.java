@@ -34,6 +34,9 @@ public class Admin extends User{
         }
         thisUser.setPassword(password);
         IOManager.saveUserMacro(thisUser);
+        StandardUser user = IOManager.loadStandardUser(username, password);
+        user.setUserInfo(thisUser);
+        IOManager.saveUser(user);
         return true;
     }
 

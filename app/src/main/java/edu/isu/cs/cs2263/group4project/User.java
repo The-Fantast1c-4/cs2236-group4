@@ -16,4 +16,8 @@ public abstract class User {
     public UserInfo getUserInfo(){
         return userInfo;
     }
+
+    public void setUserInfo(UserInfo info) {
+        userInfo = info;
+    }
 }
