@@ -352,7 +352,7 @@ public class TaskPageState implements UIState{
                     App.setState(new TaskPageState(stage,list.getName()));
                 }
                 if (event.getSource()==deleteList){
-
+                    //App.getUser().getLists().
                 }
                 if (event.getSource()==duplicate){
                     Task tempTask = tasks.getSelectionModel().getSelectedItem();
