@@ -1,10 +1,9 @@
 package edu.isu.cs.cs2263.group4project;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 public class SubTask extends Task{
-    public SubTask(String name, int priority, String description, LocalDate dueDate){
+    public SubTask(String name, int priority, String description, Date dueDate){
         super(name, priority, description, dueDate);
     }
 
@@ -18,7 +17,7 @@ public class SubTask extends Task{
     }
 
     @Override
-    public boolean addSubTask(String taskName, int priority, String description, LocalDate dueDate) {
+    public boolean addSubTask(String taskName, int priority, String description, Date dueDate) {
         return false;
     }
 
