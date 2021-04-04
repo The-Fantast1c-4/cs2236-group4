@@ -48,7 +48,7 @@ public class TaskPageState implements UIState{
     public void testState(Stage stage){
         stage.setTitle(list.getName());
         //create nodes
-        Label searchLabel = new Label("Search");
+        Button searchButton = new Button("Search");
         TextField searchBar = new TextField();
         Button logOut = new Button("LogOut");
         Button back = new Button("Back");
@@ -120,7 +120,7 @@ public class TaskPageState implements UIState{
         rightSide.getChildren().addAll(commentBox,sorting,labelSort,prioritySort,dueDateSort,completedSort,subListLabel,subLists);
         leftSide.getChildren().addAll(topButtonBar,taskBox,bottomButtonBar);
         body.getChildren().addAll(leftSide,rightSide);
-        topBar.getChildren().addAll(searchLabel,searchBar,back,logOut);
+        topBar.getChildren().addAll(searchButton,searchBar,back,logOut);
         main.getChildren().addAll(topBar,body);
         //style layout
         main.setAlignment(Pos.CENTER);
@@ -141,6 +141,7 @@ public class TaskPageState implements UIState{
         //style nodes
         back.setStyle("-fx-background-color: #e48257");
         logOut.setStyle("-fx-background-color: #e48257");
+        searchButton.setStyle("-fx-background-color: #e48257");
 
         delete.setStyle("-fx-text-fill: #f2edd7;-fx-background-color: #393232");
         moveList.setStyle("-fx-text-fill: #f2edd7;-fx-background-color: #393232");
@@ -323,6 +324,17 @@ public class TaskPageState implements UIState{
                         tasks.getItems().addAll(App.getUser().getLists().getList(list.getName()).getSection(sectionName).getTasks());
                     }
                 }
+                if (event.getSource()==searchButton){
+                    String searchTerm = searchBar.getText();
+                    SearchingVisitor v = new SearchingVisitor(searchTerm);
+                    list.accept(v);
+                    ArrayList<Task> matches = v.getTaskMatches();
+                    tasks.getItems().clear();
+                    tasks.getItems().addAll(matches);
+                    for(Label label : sections){
+                        label.setStyle("-fx-text-fill: black");
+                    }
+                }
             }
         };
         back.setOnMouseClicked(handler);
@@ -333,6 +345,7 @@ public class TaskPageState implements UIState{
         for (Label label : sections){
             label.setOnMouseClicked(handler);
         }
+        searchButton.setOnMouseClicked(handler);
     }
 
 
