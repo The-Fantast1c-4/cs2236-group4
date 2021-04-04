@@ -1,6 +1,5 @@
 package edu.isu.cs.cs2263.group4project;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -109,7 +108,7 @@ public class Command {
 
     public static void MakeTask(Section workingSection, String taskName, int priority, String description){
         // There are two methods, you can either specify a date or it will automatically select a date for you
-        LocalDate date = LocalDate.now();
+        Date date = new Date();
         workingSection.addTask(taskName, priority, description);
         // Alternatively, if a date is specified then you can use the following method:
         workingSection.addTask(taskName, priority, description, date);
@@ -140,7 +139,7 @@ public class Command {
         String name = workingTask.getName();
         int priority = workingTask.getPriority();
         String description = workingTask.getDescription();
-        LocalDate dueDate = workingTask.getDueDate();
+        Date dueDate = workingTask.getDueDate();
 
         // Step 2: Allow the user to change these values, then read them back in
 
@@ -164,7 +163,7 @@ public class Command {
 
     public static void MakeSubTask(Task currentTask, String taskName, int priority, String description) {
         // There are two methods, you can either specify a date or it will automatically select a date for you
-        LocalDate date = LocalDate.now();
+        Date date = new Date();
         currentTask.addSubTask(taskName, priority, description);
         // Alternatively, if a date is specified then you can use the following method:
         currentTask.addSubTask(taskName, priority, description, date);
