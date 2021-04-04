@@ -33,6 +33,7 @@ public class Admin extends User{
             return false;
         }
         thisUser.setPassword(password);
+        IOManager.saveUserMacro(thisUser);
         return true;
     }
 

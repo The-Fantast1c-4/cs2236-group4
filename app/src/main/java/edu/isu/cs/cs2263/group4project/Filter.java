@@ -40,13 +40,13 @@ public class Filter {
         //sort list by priority
         ArrayList<Task> tasks = getListElements(list);
         Collections.sort(tasks, new ComparatorPriority());
-        return null;
+        return tasks;
     }
 
     public static ArrayList<Task> sortByDate(List list){
         //sort list by due date
         ArrayList<Task> tasks = getListElements(list);
         Collections.sort(tasks, new ComparatorDate());
-        return null;
+        return tasks;
     }
 }

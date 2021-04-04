@@ -352,7 +352,15 @@ public class TaskPageState implements UIState{
                     App.setState(new TaskPageState(stage,list.getName()));
                 }
                 if (event.getSource()==deleteList){
-
+                    App.getUser().getLists().deleteList(list);
+                    IOManager.saveUser(App.getUser());
+                    App.setState(new HomePageState(stage));
+                }
+                if (event.getSource()==duplicate){
+                    Task tempTask = tasks.getSelectionModel().getSelectedItem();
+                    Task newTask = list.getSection(sectionName).cloneTask(tempTask);
+                    list.getSection(sectionName).addTask(newTask);
+                    tasks.getItems().add(tempTask);
                 }
             }
         };
@@ -368,6 +376,7 @@ public class TaskPageState implements UIState{
         delete.setOnMouseClicked(handler);
         deleteSection.setOnMouseClicked(handler);
         deleteList.setOnMouseClicked(handler);
+        duplicate.setOnMouseClicked(handler);
     }
 
 
