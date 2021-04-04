@@ -11,15 +11,19 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class TaskPageState implements UIState{
     private Stage stage;
     private List list;
+    private String sectionName = "Default Section";
 
     public TaskPageState(Stage stage,String list) {
         this.list = App.getUser().getLists().getList(list);
@@ -54,13 +58,8 @@ public class TaskPageState implements UIState{
         TableColumn<Task, String> taskColumn = new TableColumn<>("Task");
         taskColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         tasks.getColumns().add(taskColumn);
-        tasks.getItems().add(new Task("task",2,""));
-        for(Section listSection : FXCollections.observableArrayList(list.getSections())){
-            for(Task sectionTask : FXCollections.observableArrayList(listSection.getTasks())){
-                tasks.getItems().add(sectionTask);
-            }
+        tasks.getItems().addAll(App.getUser().getLists().getList(list.getName()).getSection(sectionName).getTasks());
 
-        }
 
 
         ComboBox comments = new ComboBox();
@@ -75,7 +74,10 @@ public class TaskPageState implements UIState{
             //button for bottom button bar
         Button makeTask = new Button("Add Task");
         Button addSection = new Button("Add Section");
-        Button archiveList  = new Button("Archive List");
+        Button archiveList  = new Button();
+        if(!list.isArchived()){
+            archiveList.setText("Archive List");
+        }else{archiveList.setText("UnArchive List");}
         Button addSublist = new Button("Add Sublist");
 
         Label subListLabel = new Label("Sublists");
@@ -159,12 +161,93 @@ public class TaskPageState implements UIState{
                     App.setState(new LoginState(stage));
                 }
                 if(event.getSource()== makeTask){
-                    
+                    Stage newTask = new Stage();
+                    newTask.setTitle("New Task");
+                    //create nodes
+                    Label titleLabel = new Label("Title");
+                    Label descriptionLabel = new Label("Description");
+                    Label priorityLabel = new Label("Priority");
+                    Label dueDateLabel = new Label("Due Date");
+                    TextField titleText = new TextField();
+                    TextField descriptionText = new TextField();
+                    ComboBox<Integer> priorityList = new ComboBox<>();
+                        priorityList.getItems().addAll(1,2,3,4,5);
+                        priorityList.setValue(1);
+                    DatePicker dueDatePicker = new DatePicker();
+                    Button createTask = new Button("Create Task");
+                    Button cancel = new Button("Cancel");
+                    //create containers
+                    GridPane main = new GridPane();
+
+                    //fill containers
+                    main.add(titleLabel,0,0);
+                    main.add(descriptionLabel,0,1);
+                    main.add(priorityLabel,0,2);
+                    main.add(dueDateLabel,0,3);
+                    main.add(createTask,0,4);
+
+                    main.add(titleText,1,0);
+                    main.add(descriptionText,1,1);
+                    main.add(priorityList,1,2);
+                    main.add(dueDatePicker,1,3);
+                    main.add(cancel,1,4);
+
+
+                    newTask.setX(stage.getX() + (stage.getWidth() / 2) - 200);
+                    newTask.setY(stage.getY() + (stage.getHeight() / 2) - 150);
+                    newTask.setWidth(400);
+                    newTask.setHeight(300);
+
+                    newTask.setScene(new Scene(main));
+                    newTask.show();
+
+                    //style
+                    main.setStyle("-fx-background-color: #f2edd7");
+                    cancel.setStyle("-fx-background-color: #e48257");
+                    createTask.setStyle("-fx-background-color: #e48257");
+
+                    EventHandler<MouseEvent> handler1 = new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+                            if(event.getSource()==cancel){
+                                newTask.close();
+                            }
+                            if(event.getSource()==createTask){
+                                String title = titleText.getText();
+                                String description = descriptionText.getText();
+                                int priority = priorityList.getValue();
+                                LocalDate dueDate = dueDatePicker.getValue();
+                                Task tempTask = new Task(title,priority,description);
+                                App.getUser().getLists().getList(list.getName()).getSection(sectionName).addTask(tempTask);
+                                IOManager.saveUser(App.getUser());
+                                tasks.getItems().add(tempTask);
+                                newTask.close();
+
+                            }
+                        }
+                    };
+                    cancel.setOnMouseClicked(handler1);
+                    createTask.setOnMouseClicked(handler1);
+
+                }
+                if(event.getSource()==archiveList){
+                    if(archiveList.getText().equals("Archive List")) {
+                        list.archive();
+                        archiveList.setText("UnArchive List");
+                        IOManager.saveUser(App.getUser());
+                    }
+                    else if(archiveList.getText().equals("UnArchive List")){
+                        list.unArchive();
+                        archiveList.setText("Archive List");
+                        IOManager.saveUser(App.getUser());
+                    }
                 }
             }
         };
         back.setOnMouseClicked(handler);
         logOut.setOnMouseClicked(handler);
+        archiveList.setOnMouseClicked(handler);
+        makeTask.setOnMouseClicked(handler);
     }
 
 

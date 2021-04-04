@@ -42,7 +42,7 @@ public class HomePageState implements UIState {
         search.setPromptText("Search here");
 
         //Listview for lists
-        ObservableList<List> userLists = FXCollections.observableArrayList(App.getUser().getLists().getLists());
+        ObservableList<List> userLists = FXCollections.observableArrayList(App.getUser().getLists().getNonArchivedLists());
 
         ListView<List> lists = new ListView<>(userLists);
         lists.setPrefWidth(600);
@@ -139,11 +139,34 @@ public class HomePageState implements UIState {
                 if(event.getSource()==lists){
                     App.setState(new TaskPageState(stage,lists.getFocusModel().getFocusedItem().getName()));
                 }
+                if(event.getSource()==searchBtn){
+                    SearchingVisitor v = new SearchingVisitor(search.getText());
+                    App.getUser().getLists().accept(v);
+                    ObservableList<List> matches = FXCollections.observableArrayList(v.getListMatches());
+                    lists.getItems().clear();
+                    lists.getItems().addAll(matches);
+                }
+                if(event.getSource()==viewArchived){
+                    if(viewArchived.getText().equals("View Archived Lists")) {
+                        ObservableList<List> archivedLists = FXCollections.observableArrayList(App.getUser().getLists().getArchivedLists());
+                        lists.getItems().clear();
+                        lists.getItems().addAll(archivedLists);
+                        viewArchived.setText("      View Lists      ");
+                    }
+                    else if(viewArchived.getText().equals("      View Lists      ")){
+                        ObservableList<List> userLists = FXCollections.observableArrayList(App.getUser().getLists().getNonArchivedLists());
+                        lists.getItems().clear();
+                        lists.getItems().addAll(userLists);
+                        viewArchived.setText("View Archived Lists");
+                    }
+                }
             }
         };
         makeNewList.setOnMouseClicked(handler);
         logOut.setOnMouseClicked(handler);
         lists.setOnMouseClicked(handler);
+        searchBtn.setOnMouseClicked(handler);
+        viewArchived.setOnMouseClicked(handler);
         }
 
     }
