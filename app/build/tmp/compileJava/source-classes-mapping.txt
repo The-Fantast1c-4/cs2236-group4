@@ -21,9 +21,8 @@ edu/isu/cs/cs2263/group4project/LoginState.java
  edu.isu.cs.cs2263.group4project.LoginState$1
 edu/isu/cs/cs2263/group4project/StandardUser.java
  edu.isu.cs.cs2263.group4project.StandardUser
-edu/isu/cs/cs2263/group4project/PasswordChangeState.java
- edu.isu.cs.cs2263.group4project.PasswordChangeState
- edu.isu.cs.cs2263.group4project.PasswordChangeState$1
+edu/isu/cs/cs2263/group4project/ComparatorLabel.java
+ edu.isu.cs.cs2263.group4project.ComparatorLabel
 edu/isu/cs/cs2263/group4project/DatabaseTests.java
  edu.isu.cs.cs2263.group4project.DatabaseTests
 edu/isu/cs/cs2263/group4project/Visitor.java
@@ -56,9 +55,8 @@ edu/isu/cs/cs2263/group4project/Task.java
  edu.isu.cs.cs2263.group4project.Task
 edu/isu/cs/cs2263/group4project/UserLists.java
  edu.isu.cs.cs2263.group4project.UserLists
-edu/isu/cs/cs2263/group4project/AdminState.java
- edu.isu.cs.cs2263.group4project.AdminState
- edu.isu.cs.cs2263.group4project.AdminState$1
+edu/isu/cs/cs2263/group4project/Section.java
+ edu.isu.cs.cs2263.group4project.Section
 edu/isu/cs/cs2263/group4project/SearchingVisitor.java
  edu.isu.cs.cs2263.group4project.SearchingVisitor
 edu/isu/cs/cs2263/group4project/GUIController.java
@@ -70,7 +68,9 @@ edu/isu/cs/cs2263/group4project/ComparatorDate.java
 edu/isu/cs/cs2263/group4project/SignUpState.java
  edu.isu.cs.cs2263.group4project.SignUpState
  edu.isu.cs.cs2263.group4project.SignUpState$1
-edu/isu/cs/cs2263/group4project/ComparatorLabel.java
- edu.isu.cs.cs2263.group4project.ComparatorLabel
-edu/isu/cs/cs2263/group4project/Section.java
- edu.isu.cs.cs2263.group4project.Section
+edu/isu/cs/cs2263/group4project/AdminState.java
+ edu.isu.cs.cs2263.group4project.AdminState
+ edu.isu.cs.cs2263.group4project.AdminState$1
+edu/isu/cs/cs2263/group4project/PasswordChangeState.java
+ edu.isu.cs.cs2263.group4project.PasswordChangeState
+ edu.isu.cs.cs2263.group4project.PasswordChangeState$1

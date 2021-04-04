@@ -73,14 +73,18 @@ public class PasswordChangeState implements UIState  {
             public void handle(MouseEvent event) {
                 if (event.getSource()==changePassword){
                     String user =userFirstLast.getText();
-                    String newPass=userFirstLast.getText();
+                    String newPass=password.getText();
 
                     if (user=="admin") {
                         Admin admin = App.getAdmin();
                         admin.changeAdminPassword(newPass);
                     } else {
                         Admin admin=App.getAdmin();
-                        admin.changeUserPassword(user,newPass);
+                        if (admin.changeUserPassword(user,newPass)){
+                            System.out.println("Password Change successful");
+                        } else {
+                            System.out.println("Password Change NOT successful");
+                        }
                     }
                 }else {
                     if (event.getSource()==exit){
