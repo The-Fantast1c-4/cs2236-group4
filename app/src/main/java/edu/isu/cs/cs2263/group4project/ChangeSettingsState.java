@@ -112,14 +112,22 @@ public class ChangeSettingsState implements UIState {
 
                 if (event.getSource()==browseBtn){
                     File selected=browse.showOpenDialog(stage);
-                    logLocation= selected.getAbsolutePath();
+
+                    String absolutePath = selected.getAbsolutePath();
+
+                    Path currentAbsolutePath = Paths.get("").toAbsolutePath();
+
+                    logLocation = "./" + currentAbsolutePath.relativize(Paths.get(absolutePath)).toString() + "/";
+
                     browseBtn.setText(logLocation);
                 }
                 // log location saved in logLocation
 
                 if (event.getSource()==browseUserDataBtn){
-                    File selected=browse.showOpenDialog(stage);
-                    String absolutePath = selected.getAbsolutePath();
+                    DirectoryChooser directoryChooser = new DirectoryChooser();
+                    directoryChooser.setTitle("Choose User Directory");
+                    File selectedDirectory = directoryChooser.showDialog(stage);
+                    String absolutePath = selectedDirectory.getAbsolutePath();
 
                     Path currentAbsolutePath = Paths.get("").toAbsolutePath();
 
