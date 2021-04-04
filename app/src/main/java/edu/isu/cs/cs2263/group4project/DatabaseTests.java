@@ -5,10 +5,12 @@ import java.util.ArrayList;
 public class DatabaseTests {
     public static void main(String[] args) {
 
+        Admin admin = new Admin();
+
         Settings settings = new Settings();
         settings.initializeSettings();
 
-        Admin admin = new Admin();
+        //Admin admin = new Admin();
         UserInfo myInfo = new UserInfo("spierob2", "Robbie", "Spiers", "dumb college teen", "spierob2@isu.edu", "path", "hereismypassword");
         User me = new StandardUser(myInfo);
         UserInfo hisInfo = new UserInfo("mistryman", "Shivank", "Mistry", "info major", "shivu@gmail.com", "path2", "hereishispassword");

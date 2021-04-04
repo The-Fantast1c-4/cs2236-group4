@@ -34,5 +34,13 @@ class AppTest {
         assertNotNull(admin.getAllUsers());
         ArrayList<UserInfo> infos = admin.getAllUsers();
         assertEquals(infos.get(0).getUsername(), "admin");
+
+        // Test 2: changeUserPassword()
+        admin.changeUserPassword("mistryman", "newpassword");
+        assertNotNull(IOManager.loadStandardUser("mistryman", "newpassword"));
+        admin.changeUserPassword("mistryman", "hereishispassword");
+        assertNotNull(IOManager.loadStandardUser("mistryman", "hereishispassword"));
+
+        // Test 3:
     }
 }
