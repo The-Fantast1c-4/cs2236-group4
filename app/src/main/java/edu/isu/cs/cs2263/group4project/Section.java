@@ -1,5 +1,6 @@
 package edu.isu.cs.cs2263.group4project;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -50,7 +51,7 @@ public class Section {
         //creates task
         tasks.add(task);
     }
-    public boolean addTask(String taskName, int priority, String description, Date dueDate){
+    public boolean addTask(String taskName, int priority, String description, LocalDate dueDate){
         boolean nameExists = false;
         for(Task task: tasks){
             if(task.getName().equals(taskName)){

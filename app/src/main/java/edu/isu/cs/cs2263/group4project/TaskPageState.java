@@ -44,7 +44,7 @@ public class TaskPageState implements UIState{
         TextField searchBar = new TextField();
         Button logOut = new Button("LogOut");
         Button back = new Button("Back");
-            //buttons for button bar
+        //buttons for button bar
         Button delete = new Button("Delete");
         Button moveList = new Button("Move List");
         Button moveSection = new Button("Move Section");
@@ -71,7 +71,7 @@ public class TaskPageState implements UIState{
         CheckBox dueDateSort = new CheckBox("Due Date");
         CheckBox completedSort = new CheckBox("Completed");
 
-            //button for bottom button bar
+        //button for bottom button bar
         Button makeTask = new Button("Add Task");
         Button addSection = new Button("Add Section");
         Button archiveList  = new Button();
@@ -121,9 +121,7 @@ public class TaskPageState implements UIState{
         topButtonBar.setSpacing(2);
         bottomButtonBar.setSpacing(10);
         //fill info
-        for(Task userTask : App.getUser().getLists().getList(0).getSection(0).getTasks()){
-            tasks.getItems().add(userTask);
-        }
+
         //style nodes
         back.setStyle("-fx-background-color: #e48257");
         logOut.setStyle("-fx-background-color: #e48257");
@@ -171,8 +169,8 @@ public class TaskPageState implements UIState{
                     TextField titleText = new TextField();
                     TextField descriptionText = new TextField();
                     ComboBox<Integer> priorityList = new ComboBox<>();
-                        priorityList.getItems().addAll(1,2,3,4,5);
-                        priorityList.setValue(1);
+                    priorityList.getItems().addAll(1,2,3,4,5);
+                    priorityList.setValue(1);
                     DatePicker dueDatePicker = new DatePicker();
                     Button createTask = new Button("Create Task");
                     Button cancel = new Button("Cancel");
@@ -217,8 +215,8 @@ public class TaskPageState implements UIState{
                                 String description = descriptionText.getText();
                                 int priority = priorityList.getValue();
                                 LocalDate dueDate = dueDatePicker.getValue();
-                                Task tempTask = new Task(title,priority,description);
-                                App.getUser().getLists().getList(list.getName()).getSection(sectionName).addTask(tempTask);
+                                Task tempTask = new Task(title,priority,description, dueDate);
+                                list.getSection(sectionName).addTask(tempTask);
                                 IOManager.saveUser(App.getUser());
                                 tasks.getItems().add(tempTask);
                                 newTask.close();

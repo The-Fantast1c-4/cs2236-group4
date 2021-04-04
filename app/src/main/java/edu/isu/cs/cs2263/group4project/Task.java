@@ -1,5 +1,6 @@
 package edu.isu.cs.cs2263.group4project;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -7,12 +8,12 @@ public class Task {
     private String name;
     private int priority;
     private String description;
-    private Date dueDate;
+    private LocalDate dueDate;
     private boolean complete;
     private ArrayList<String> labels = new ArrayList<>();
     private ArrayList<SubTask> subTasks = new ArrayList<>();
 
-    public Task(String name, int priority, String description, Date dueDate) {
+    public Task(String name, int priority, String description, LocalDate dueDate) {
         this.name = name;
         this.priority = priority;
         this.description = description;
@@ -25,7 +26,7 @@ public class Task {
         this.priority = priority;
         this.description = description;
         this.complete = false;
-        this.dueDate = new Date();
+        this.dueDate = LocalDate.now();
     }
 
     // Basic getter and setter methods
@@ -53,11 +54,11 @@ public class Task {
         this.description = description;
     }
 
-    public Date getDueDate() {
+    public LocalDate getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(Date dueDate) {
+    public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
     }
 
@@ -83,7 +84,7 @@ public class Task {
 
     public boolean isOverDue() {
         //returns true if overdue
-        return dueDate.after(new Date());       // Date() constructor automatically sets the time to the current time
+        return dueDate.isBefore(LocalDate.now());
     }
     public void addLabel(String label){
         //adds label
@@ -97,7 +98,7 @@ public class Task {
         //adds a subTask
         subTasks.add(subTask);
     }
-    public boolean addSubTask(String taskName, int priority, String description, Date dueDate){
+    public boolean addSubTask(String taskName, int priority, String description, LocalDate dueDate){
         boolean nameExists = false;
         for(SubTask task: subTasks){
             if(task.getName().equals(taskName)){
