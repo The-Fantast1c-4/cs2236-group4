@@ -120,7 +120,6 @@ public class SignUpState implements UIState {
                             String pathToPic = "";
                             UserInfo info = new UserInfo(uName, fName, lName, bio, eMail, pathToPic, firstPassword);
                             StandardUser user = new StandardUser(info);
-                            //IOManager.saveUser(user);
                             App.setState(new LoginState(stage));
 
                         }else {gridPane.add(badUserName,1,8);}

@@ -3,12 +3,36 @@
  */
 package edu.isu.cs.cs2263.group4project;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class AppTest {
-    @Test void appHasAGreeting() {
-        App classUnderTest = new App();
-        assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");
+
+    @Test
+    void userInfoTests() {
+        // Create new UserInfo
+        UserInfo info = new UserInfo("shannon356", "Culley", "Shannon", "Business major", "shannon@isu.edu", "path", "password");
+
+        // Test attemptLogin()
+        // Test 1: Correct password
+        assertTrue(info.attemptLogin("password"));
+        // Test 2: Incorrect password
+        assertFalse(info.attemptLogin("Password"));
+        assertFalse(info.attemptLogin("notthepassword"));
+    }
+
+    @Test
+    void adminTests() {
+        // Load the Admin from persistent storage
+        Admin admin = IOManager.loadAdmin("admin");
+
+        // Test 1: getAllUsers()
+        assertNotNull(admin.getAllUsers());
+        ArrayList<UserInfo> infos = admin.getAllUsers();
+        assertEquals(infos.get(0).getUsername(), "admin");
     }
 }

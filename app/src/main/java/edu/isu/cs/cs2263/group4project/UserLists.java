@@ -40,7 +40,7 @@ public class UserLists {
     public ArrayList<List> getNonArchivedLists(){
         ArrayList<List> nonArchivedLists = new ArrayList<>();
         for (List list : lists){
-            if (list.isArchived()){
+            if (!list.isArchived()){
                 nonArchivedLists.add(list);
             }
         }

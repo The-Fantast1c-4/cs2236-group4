@@ -60,7 +60,7 @@ public class List {
         return sections.get(secNum);
     }
 
-    public void Archive(){
+    public void archive(){
         this.isArchived = true;
     }
     public void unArchive(){
