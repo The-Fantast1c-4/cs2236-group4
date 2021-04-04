@@ -32,6 +32,7 @@ public class TaskPageState implements UIState{
         this.sectionName = section;
     }
 
+
     public TaskPageState(Stage stage,String list) {
         this.list = App.getUser().getLists().getList(list);
         this.stage = stage;
@@ -99,7 +100,10 @@ public class TaskPageState implements UIState{
         Button deleteList = new Button("Delete List");
 
         Label subListLabel = new Label("Sublists");
-        ListView<SubList> subLists = new ListView<SubList>();
+
+        ObservableList<SubList> subListsList = FXCollections.observableArrayList(list.getSubLists());
+        ListView<SubList> subLists = new ListView<SubList>(subListsList);
+
 
         //create Layout
         VBox main = new VBox();
@@ -114,12 +118,12 @@ public class TaskPageState implements UIState{
         HBox bottomButtonBar = new HBox();
 
         //fill layout
-        bottomButtonBar.getChildren().addAll(makeTask,addSection,archiveList,addSublist,deleteSection,deleteList);
+        bottomButtonBar.getChildren().addAll(makeTask,addSection,archiveList,deleteSection,deleteList);
         sectionLabels.getChildren().addAll(sections);
         taskBox.getChildren().addAll(sectionLabels,tasks);
         topButtonBar.getChildren().addAll(delete,moveList,moveSection,duplicate,viewTask);
         commentBox.getChildren().addAll(comments,addComment);
-        rightSide.getChildren().addAll(commentBox,sorting,labelSort,prioritySort,dueDateSort,completedSort,subListLabel,subLists);
+        rightSide.getChildren().addAll(commentBox,sorting,labelSort,prioritySort,dueDateSort,completedSort,subListLabel,subLists,addSublist);
         leftSide.getChildren().addAll(topButtonBar,taskBox,bottomButtonBar);
         body.getChildren().addAll(leftSide,rightSide);
         topBar.getChildren().addAll(searchButton,searchBar,back,logOut);
@@ -362,6 +366,61 @@ public class TaskPageState implements UIState{
                     list.getSection(sectionName).addTask(newTask);
                     tasks.getItems().add(tempTask);
                 }
+                if(event.getSource()==addSublist) {
+                    Stage newList = new Stage();
+                    newList.setTitle("New Sub List");
+                    //create nodes
+                    TextField name = new TextField();
+                    name.setPromptText("Name");
+                    TextField description = new TextField();
+                    description.setPromptText("Description");
+                    Button save = new Button("Save");
+                    Button cancel = new Button("Cancel");
+
+                    //create containers
+                    HBox buttonBox = new HBox();
+                    VBox main = new VBox();
+
+                    //fill containers
+                    buttonBox.getChildren().addAll(save,cancel);
+                    main.getChildren().addAll(name,description,buttonBox);
+
+
+                    newList.setX(stage.getX() + (stage.getWidth() / 2) - 200);
+                    newList.setY(stage.getY() + (stage.getHeight() / 2) - 150);
+                    newList.setWidth(400);
+                    newList.setHeight(300);
+
+                    newList.setScene(new Scene(main));
+                    newList.show();
+
+                    main.setStyle("-fx-background-color: #f2edd7");
+                    save.setStyle("-fx-background-color: #e48257");
+                    cancel.setStyle("-fx-background-color: #e48257");
+
+                    EventHandler<MouseEvent> handler1 = new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+                            if(event.getSource()==cancel){
+                                newList.close();
+                            }
+                            if(event.getSource()==save||(name.getText()!="")){
+                                String sName = name.getText();
+                                String sDescription = description.getText();
+                                list.addSubList(sName,sDescription);
+                                IOManager.saveUser(App.getUser());
+                                subLists.getItems().add(list.getSublist(sName));
+                                newList.close();
+                            }
+
+                        }
+                    };
+                    cancel.setOnMouseClicked(handler1);
+                    save.setOnMouseClicked(handler1);
+                }
+                if(event.getSource()==subLists){
+                    //App.setState(new SLTaskPageState(stage,list.getName(),subLists.getFocusModel().getFocusedItem().getName()));
+                }
             }
         };
         back.setOnMouseClicked(handler);
@@ -377,6 +436,8 @@ public class TaskPageState implements UIState{
         deleteSection.setOnMouseClicked(handler);
         deleteList.setOnMouseClicked(handler);
         duplicate.setOnMouseClicked(handler);
+        addSublist.setOnMouseClicked(handler);
+        subLists.setOnMouseClicked(handler);
     }
 
 
