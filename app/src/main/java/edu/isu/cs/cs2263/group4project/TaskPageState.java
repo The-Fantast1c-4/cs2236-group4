@@ -95,6 +95,8 @@ public class TaskPageState implements UIState{
             archiveList.setText("Archive List");
         }else{archiveList.setText("UnArchive List");}
         Button addSublist = new Button("Add Sublist");
+        Button deleteSection = new Button("Delete Section");
+        Button deleteList = new Button("Delete List");
 
         Label subListLabel = new Label("Sublists");
         ListView<SubList> subLists = new ListView<SubList>();
@@ -112,7 +114,7 @@ public class TaskPageState implements UIState{
         HBox bottomButtonBar = new HBox();
 
         //fill layout
-        bottomButtonBar.getChildren().addAll(makeTask,addSection,archiveList,addSublist);
+        bottomButtonBar.getChildren().addAll(makeTask,addSection,archiveList,addSublist,deleteSection,deleteList);
         sectionLabels.getChildren().addAll(sections);
         taskBox.getChildren().addAll(sectionLabels,tasks);
         topButtonBar.getChildren().addAll(delete,moveList,moveSection,duplicate,viewTask);
@@ -155,6 +157,8 @@ public class TaskPageState implements UIState{
         addSection.setStyle("-fx-background-color: #e48257");
         addSublist.setStyle("-fx-background-color: #e48257");
         archiveList.setStyle("-fx-background-color: #e48257");
+        deleteSection.setStyle("-fx-background-color: #e48257");
+        deleteList.setStyle("-fx-background-color: #e48257");
 
 
         main.setStyle("-fx-background-color: #f2edd7");
@@ -335,6 +339,21 @@ public class TaskPageState implements UIState{
                         label.setStyle("-fx-text-fill: black");
                     }
                 }
+                if (event.getSource()==delete){
+                    Task tempTask = tasks.getSelectionModel().getSelectedItem();
+                    App.getUser().getLists().getList(list.getName()).getSection(sectionName).deleteTask(tempTask);
+                    IOManager.saveUser(App.getUser());
+                    App.setState(new TaskPageState(stage,list.getName(),sectionName));
+
+                }
+                if (event.getSource()==deleteSection){
+                    list.deleteSection(list.getSection(sectionName));
+                    IOManager.saveUser(App.getUser());
+                    App.setState(new TaskPageState(stage,list.getName()));
+                }
+                if (event.getSource()==deleteList){
+
+                }
             }
         };
         back.setOnMouseClicked(handler);
@@ -346,6 +365,9 @@ public class TaskPageState implements UIState{
             label.setOnMouseClicked(handler);
         }
         searchButton.setOnMouseClicked(handler);
+        delete.setOnMouseClicked(handler);
+        deleteSection.setOnMouseClicked(handler);
+        deleteList.setOnMouseClicked(handler);
     }
 
 
