@@ -14,6 +14,7 @@ import java.util.PrimitiveIterator;
 public class App extends Application {
     private static UIState state;
     private static StandardUser user;
+    private static Admin admin;
     public static void main(String[] args) {
         Application.launch(args);
     }
@@ -47,7 +48,15 @@ public class App extends Application {
         App.user = user;
     }
 
+    public static void setAdmin(Admin admin) {
+        App.admin = admin;
+    }
+
     public static StandardUser getUser() {
         return user;
+    }
+
+    public static Admin getAdmin() {
+        return admin;
     }
 }

@@ -89,7 +89,7 @@ public class LoginState implements UIState {
                             System.out.println("Login failed");
                         } else {
                             System.out.println("Login Successful");
-                            //App.setUser(user);            // You need to have a way to set the current user to be the admin or something
+                            App.setAdmin(user);            // You need to have a way to set the current user to be the admin or something
                             App.setState(new AdminState(stage));
                         }
 

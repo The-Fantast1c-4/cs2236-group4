@@ -38,7 +38,7 @@ public class AdminState implements UIState{
         name.setFont(new Font("Arial", 30));
 
         //Listview for users
-        Admin admin = IOManager.loadAdmin("admin");
+        Admin admin = App.getAdmin();
         ArrayList<UserInfo> users = admin.getAllUsers();
         ListView userlist= new ListView();
         for (int i = 0; i < users.size(); i++) {
@@ -76,8 +76,12 @@ public class AdminState implements UIState{
         stage.show();
         EventHandler<MouseEvent> handler = new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
-                if (event.getSource()==logOut){
+                if (event.getSource()==logOut) {
+                    App.setAdmin(null);
                     App.setState(new LoginState(stage));
+                }
+                if (event.getSource()==userlist){
+                    App.setState(new PasswordChangeState(stage));
                 }else { if (event.getSource() == changeSettingsBtn){
                     App.setState(new ChangeSettingsState(stage));
 
@@ -87,7 +91,8 @@ public class AdminState implements UIState{
         };
         logOut.setOnMouseClicked(handler);
         changeSettingsBtn.setOnMouseClicked(handler);
-        
+        userlist.setOnMouseClicked(handler);
+
     }
 
 }
