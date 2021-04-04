@@ -118,7 +118,8 @@ public class IOManager {
         }
         for (UserInfo user : macros){
             if (user.getUsername().equals(info.getUsername())){
-                return;
+                macros.remove(user);
+                break;
             }
         }
         macros.add(info);
@@ -136,7 +137,19 @@ public class IOManager {
         }
         Gson gson = new Gson();
         StandardUser user = gson.fromJson(json, StandardUser.class);
-        if (!user.attemptLogin(password)){
+
+
+        ArrayList<UserInfo> infos = loadUserMacro();
+        UserInfo myInfo = null;
+        for (UserInfo info : infos) {
+            if (info.getUsername().equals(username)){
+                myInfo = info;
+            }
+        }
+        if (myInfo == null) {
+            return null;
+        }
+        if (!myInfo.attemptLogin(password)){
             return null;
         }
         return user;

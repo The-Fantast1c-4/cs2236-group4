@@ -32,11 +32,10 @@ class AppTest {
 
         // Test 1: getAllUsers()
         assertNotNull(admin.getAllUsers());
-        ArrayList<UserInfo> infos = admin.getAllUsers();
-        assertEquals(infos.get(0).getUsername(), "admin");
+        assertNotNull(admin.getAllUsers());
 
         // Test 2: changeUserPassword()
-        admin.changeUserPassword("mistryman", "newpassword");
+        assertTrue(admin.changeUserPassword("mistryman", "newpassword"));
         assertNotNull(IOManager.loadStandardUser("mistryman", "newpassword"));
         admin.changeUserPassword("mistryman", "hereishispassword");
         assertNotNull(IOManager.loadStandardUser("mistryman", "hereishispassword"));
@@ -60,5 +59,29 @@ class AppTest {
 
         sorted = Filter.sortBy(list, "label");
         assertEquals(def.getTask("Test 3"), sorted.get(1));
+    }
+
+    @Test
+    void IOManagerTests() {
+        // Test 1: writeSettings(), loadSettings()
+        Settings settings = IOManager.loadSettings();
+        Settings newSettings = new Settings();
+        newSettings.initializeSettings();
+        assertTrue(IOManager.writeSettings(newSettings));
+        assertTrue(newSettings.equals(IOManager.loadSettings()));
+        assertTrue(IOManager.writeSettings(settings));
+        assertEquals(settings, IOManager.loadSettings());
+
+        // Buildup instantiation for future tests
+        UserInfo newUser = new UserInfo("spierob2", "Robbie", "Spiers", "Physics Major", "spierob2@isu.edu", "", "password");
+        StandardUser user = new StandardUser(newUser);
+
+        // Test 2: saveUserMacro(), saveUser(), loadUserMacro(), loadStandardUser()
+        IOManager.saveUserMacro(newUser);
+        IOManager.saveUser(user);
+        assertTrue(IOManager.loadUserMacro().contains(newUser));
+        assertNotNull(IOManager.loadStandardUser("spierob2", "password"));
+
+
     }
 }
