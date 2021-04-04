@@ -52,7 +52,10 @@ public class TaskPageState implements UIState{
         Button duplicate = new Button("Duplicate");
         Button viewTask = new Button("View Task");
 
-        Label section = new Label("Default");
+        ArrayList<Label> sections = new ArrayList<>();
+        for(Section sect: App.getUser().getLists().getList(list.getName()).getSections()){
+            sections.add(new Label(sect.getName()));
+        }
         //table
 
         TableView<Task> tasks = new TableView();
@@ -98,7 +101,7 @@ public class TaskPageState implements UIState{
 
         //fill layout
         bottomButtonBar.getChildren().addAll(makeTask,addSection,archiveList,addSublist);
-        sectionLabels.getChildren().addAll(section);
+        sectionLabels.getChildren().addAll(sections);
         taskBox.getChildren().addAll(sectionLabels,tasks);
         topButtonBar.getChildren().addAll(delete,moveList,moveSection,duplicate,viewTask);
         commentBox.getChildren().addAll(comments,addComment);
@@ -122,9 +125,7 @@ public class TaskPageState implements UIState{
         topButtonBar.setSpacing(2);
         bottomButtonBar.setSpacing(10);
         //fill info
-        for(Task userTask : App.getUser().getLists().getList(0).getSection(0).getTasks()){
-            tasks.getItems().add(userTask);
-        }
+
         //style nodes
         back.setStyle("-fx-background-color: #e48257");
         logOut.setStyle("-fx-background-color: #e48257");
@@ -175,6 +176,7 @@ public class TaskPageState implements UIState{
                         priorityList.getItems().addAll(1,2,3,4,5);
                         priorityList.setValue(1);
                     DatePicker dueDatePicker = new DatePicker();
+                    dueDatePicker.setValue(LocalDate.now());
                     Button createTask = new Button("Create Task");
                     Button cancel = new Button("Cancel");
                     //create containers
@@ -219,9 +221,9 @@ public class TaskPageState implements UIState{
                                 int priority = priorityList.getValue();
                                 LocalDate dueDate = dueDatePicker.getValue();
 
+
                                 ZoneId defaultZoneID = ZoneId.systemDefault();
                                 Date date = Date.from(dueDate.atStartOfDay(defaultZoneID).toInstant());
-
 
                                 Task tempTask = new Task(title,priority,description, date);
                                 list.getSection(sectionName).addTask(tempTask);
