@@ -17,6 +17,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class ChangeSettingsState implements UIState {
     private Stage stage;
@@ -87,7 +89,14 @@ public class ChangeSettingsState implements UIState {
                     DirectoryChooser directoryChooser = new DirectoryChooser();
                     directoryChooser.setTitle("Choose User Directory");
                     File selectedDirectory = directoryChooser.showDialog(stage);
-                    userDirectory = selectedDirectory.getAbsolutePath();
+                    String absolutePath = selectedDirectory.getAbsolutePath();
+
+                    // These next lines of code convert the absolute path into a relative path
+
+                    Path currentAbsolutePath = Paths.get("").toAbsolutePath();
+
+                    userDirectory = "./" + currentAbsolutePath.relativize(Paths.get(absolutePath)).toString() + "/users.json";
+
                     browseDirectory.setText(userDirectory);
                     //user selected directory will be stored here.
                 }
@@ -110,7 +119,11 @@ public class ChangeSettingsState implements UIState {
 
                 if (event.getSource()==browseUserDataBtn){
                     File selected=browse.showOpenDialog(stage);
-                    userDataLocation= selected.getAbsolutePath();
+                    String absolutePath = selected.getAbsolutePath();
+
+                    Path currentAbsolutePath = Paths.get("").toAbsolutePath();
+
+                    userDataLocation = "./" + currentAbsolutePath.relativize(Paths.get(absolutePath)).toString() + "/";
                     browseUserDataBtn.setText(userDataLocation);
                 }
                 //User data location : will be in userDataLocation

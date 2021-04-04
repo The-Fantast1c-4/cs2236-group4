@@ -35,7 +35,6 @@ public class LoginState implements UIState {
     }
 
     public static void testState(Stage stage) {
-        ArrayList<UserInfo> users = IOManager.loadUserMacro();
 
         //create nodes
         stage.setTitle("Login");
