@@ -354,6 +354,12 @@ public class TaskPageState implements UIState{
                 if (event.getSource()==deleteList){
 
                 }
+                if (event.getSource()==duplicate){
+                    Task tempTask = tasks.getSelectionModel().getSelectedItem();
+                    Task newTask = list.getSection(sectionName).cloneTask(tempTask);
+                    list.getSection(sectionName).addTask(newTask);
+                    tasks.getItems().add(tempTask);
+                }
             }
         };
         back.setOnMouseClicked(handler);
@@ -368,6 +374,7 @@ public class TaskPageState implements UIState{
         delete.setOnMouseClicked(handler);
         deleteSection.setOnMouseClicked(handler);
         deleteList.setOnMouseClicked(handler);
+        duplicate.setOnMouseClicked(handler);
     }
 
 
