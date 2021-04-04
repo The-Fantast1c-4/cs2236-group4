@@ -59,6 +59,14 @@ public class UserLists {
         return lists.get(listNum);
     }
 
+    public void deleteList(String listName) {
+        deleteList(getList(listName));
+    }
+
+    public void deleteList(List list) {
+        lists.remove(list);
+    }
+
     public void accept(Visitor v){
         v.visit(this);
     }
