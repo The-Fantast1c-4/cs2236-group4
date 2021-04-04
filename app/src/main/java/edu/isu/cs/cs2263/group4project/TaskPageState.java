@@ -26,10 +26,17 @@ public class TaskPageState implements UIState{
     private List list;
     private String sectionName = "Default Section";
 
+    public TaskPageState(Stage stage,String list,String section){
+        this.list = App.getUser().getLists().getList(list);
+        this.stage = stage;
+        this.sectionName = section;
+    }
+
     public TaskPageState(Stage stage,String list) {
         this.list = App.getUser().getLists().getList(list);
         this.stage = stage;
     }
+
 
     public void handle(EventHandler event) {
 
@@ -55,6 +62,11 @@ public class TaskPageState implements UIState{
         ArrayList<Label> sections = new ArrayList<>();
         for(Section sect: App.getUser().getLists().getList(list.getName()).getSections()){
             sections.add(new Label(sect.getName()));
+        }
+        for(Label label : sections){
+            if (label.getText().equals(sectionName)){
+                label.setStyle("-fx-text-fill: red");
+            }
         }
         //table
 
@@ -238,6 +250,56 @@ public class TaskPageState implements UIState{
                     createTask.setOnMouseClicked(handler1);
 
                 }
+                if(event.getSource()==addSection){
+                    Stage newSection = new Stage();
+                    newSection.setTitle("New Section");
+                    //create nodes
+                    TextField name = new TextField();
+                    name.setPromptText("Name");
+                    Button save = new Button("Save");
+                    Button cancel = new Button("Cancel");
+
+                    //create containers
+                    HBox buttonBox = new HBox();
+                    VBox main = new VBox();
+
+                    //fill containers
+                    buttonBox.getChildren().addAll(save,cancel);
+                    main.getChildren().addAll(name,buttonBox);
+
+
+                    newSection.setX(stage.getX() + (stage.getWidth() / 2) - 200);
+                    newSection.setY(stage.getY() + (stage.getHeight() / 2) - 150);
+                    newSection.setWidth(400);
+                    newSection.setHeight(300);
+
+                    newSection.setScene(new Scene(main));
+                    newSection.show();
+
+                    main.setStyle("-fx-background-color: #f2edd7");
+                    save.setStyle("-fx-background-color: #e48257");
+                    cancel.setStyle("-fx-background-color: #e48257");
+
+                    EventHandler<MouseEvent> handler1 = new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+                            if(event.getSource()==cancel){
+                                newSection.close();
+                            }
+                            if(event.getSource()==save||(name.getText()!="")){
+                                String sName = name.getText();
+                                App.getUser().getLists().getList(list.getName()).addSection(sName);
+                                IOManager.saveUser(App.getUser());
+                                sectionLabels.getChildren().add(new Label(sName));
+                                newSection.close();
+                                App.setState(new TaskPageState(stage, list.getName(),sName));
+                            }
+
+                        }
+                    };
+                    cancel.setOnMouseClicked(handler1);
+                    save.setOnMouseClicked(handler1);
+                }
                 if(event.getSource()==archiveList){
                     if(archiveList.getText().equals("Archive List")) {
                         list.archive();
@@ -250,12 +312,27 @@ public class TaskPageState implements UIState{
                         IOManager.saveUser(App.getUser());
                     }
                 }
+                for(Label lab : sections){
+                    if(event.getSource()==lab){
+                        sectionName = lab.getText();
+                        for(Label label : sections){
+                            label.setStyle("-fx-text-fill: black");
+                        }
+                        lab.setStyle("-fx-text-fill: red");
+                        tasks.getItems().clear();
+                        tasks.getItems().addAll(App.getUser().getLists().getList(list.getName()).getSection(sectionName).getTasks());
+                    }
+                }
             }
         };
         back.setOnMouseClicked(handler);
         logOut.setOnMouseClicked(handler);
         archiveList.setOnMouseClicked(handler);
         makeTask.setOnMouseClicked(handler);
+        addSection.setOnMouseClicked(handler);
+        for (Label label : sections){
+            label.setOnMouseClicked(handler);
+        }
     }
 
 

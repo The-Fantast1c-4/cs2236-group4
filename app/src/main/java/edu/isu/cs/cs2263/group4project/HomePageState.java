@@ -112,6 +112,10 @@ public class HomePageState implements UIState {
                     newList.setScene(new Scene(main));
                     newList.show();
 
+                    main.setStyle("-fx-background-color: #f2edd7");
+                    save.setStyle("-fx-background-color: #e48257");
+                    cancel.setStyle("-fx-background-color: #e48257");
+
                     EventHandler<MouseEvent> handler1 = new EventHandler<MouseEvent>() {
                         @Override
                         public void handle(MouseEvent event) {
