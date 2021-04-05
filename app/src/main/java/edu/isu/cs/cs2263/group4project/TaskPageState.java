@@ -39,6 +39,8 @@ public class TaskPageState implements UIState{
     }
 
 
+
+
     public void handle(EventHandler event) {
 
     }
@@ -73,8 +75,15 @@ public class TaskPageState implements UIState{
 
         TableView<Task> tasks = new TableView();
         TableColumn<Task, String> taskColumn = new TableColumn<>("Task");
+        TableColumn<Task, Date> dateColumn = new TableColumn<>("Due Date");
+        TableColumn<Task, String> completeColumn = new TableColumn<>("Complete");
+
         taskColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        tasks.getColumns().add(taskColumn);
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
+        completeColumn.setCellValueFactory(new PropertyValueFactory<>("isComplete"));
+
+
+        tasks.getColumns().addAll(taskColumn,dateColumn,completeColumn);
         tasks.getItems().addAll(list.getSection(sectionName).getTasks());
 
 
@@ -138,6 +147,7 @@ public class TaskPageState implements UIState{
         body.setAlignment(Pos.CENTER);
         rightSide.setSpacing(5);
         leftSide.setSpacing(10);
+        tasks.setMinWidth(500);
         taskBox.setSpacing(15);
         subLists.setMaxSize(100000,200);
         topButtonBar.setSpacing(2);
@@ -453,6 +463,120 @@ public class TaskPageState implements UIState{
                     tasks.getItems().clear();
                     tasks.getItems().addAll(sortedTasks);
                 }
+                if(event.getSource()==viewTask){
+                    Task tempTask = tasks.getSelectionModel().getSelectedItem();
+                    App.setState(new TaskViewState(stage,list.getName(),sectionName, tempTask.getName()));
+                }
+                if(event.getSource()==moveList){
+
+                    Stage moveList = new Stage();
+                    moveList.setTitle("Move List");
+                    //create nodes
+                    TextField name = new TextField();
+                    name.setPromptText("Name");
+                    Button save = new Button("Save");
+                    Button cancel = new Button("Cancel");
+
+                    //create containers
+                    HBox buttonBox = new HBox();
+                    VBox main = new VBox();
+
+                    //fill containers
+                    buttonBox.getChildren().addAll(save,cancel);
+                    main.getChildren().addAll(name,buttonBox);
+
+
+                    moveList.setX(stage.getX() + (stage.getWidth() / 2) - 200);
+                    moveList.setY(stage.getY() + (stage.getHeight() / 2) - 150);
+                    moveList.setWidth(400);
+                    moveList.setHeight(300);
+
+                    moveList.setScene(new Scene(main));
+                    moveList.show();
+
+                    main.setStyle("-fx-background-color: #f2edd7");
+                    save.setStyle("-fx-background-color: #e48257");
+                    cancel.setStyle("-fx-background-color: #e48257");
+
+                    EventHandler<MouseEvent> handler1 = new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+                            if(event.getSource()==cancel){
+                                moveList.close();
+                            }
+                            if(event.getSource()==save||(name.getText()!="")){
+                                Task tempTask = tasks.getSelectionModel().getSelectedItem();
+                                String sName = name.getText();
+                                if(App.getUser().getLists().getList(sName)==null){
+                                    App.getUser().getLists().makeList(sName,"");
+                                    App.getUser().getLists().getList(sName).getSection(0).addTask(tempTask);
+                                }else{App.getUser().getLists().getList(sName).getSection(0).addTask(tempTask); }
+                                list.getSection(sectionName).deleteTask(tempTask);
+                                IOManager.saveUser(App.getUser());
+                                App.setState(new TaskPageState(stage,list.getName(),sectionName));
+                                moveList.close();
+                            }
+
+                        }
+                    };
+                    cancel.setOnMouseClicked(handler1);
+                    save.setOnMouseClicked(handler1);
+                }
+                if(event.getSource()==moveSection){
+
+                    Stage moveSection = new Stage();
+                    moveSection.setTitle("Move Section");
+                    //create nodes
+                    TextField name = new TextField();
+                    name.setPromptText("New Section");
+                    Button save = new Button("Save");
+                    Button cancel = new Button("Cancel");
+
+                    //create containers
+                    HBox buttonBox = new HBox();
+                    VBox main = new VBox();
+
+                    //fill containers
+                    buttonBox.getChildren().addAll(save,cancel);
+                    main.getChildren().addAll(name,buttonBox);
+
+
+                    moveSection.setX(stage.getX() + (stage.getWidth() / 2) - 200);
+                    moveSection.setY(stage.getY() + (stage.getHeight() / 2) - 150);
+                    moveSection.setWidth(400);
+                    moveSection.setHeight(300);
+
+                    moveSection.setScene(new Scene(main));
+                    moveSection.show();
+
+                    main.setStyle("-fx-background-color: #f2edd7");
+                    save.setStyle("-fx-background-color: #e48257");
+                    cancel.setStyle("-fx-background-color: #e48257");
+
+                    EventHandler<MouseEvent> handler1 = new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+                            if(event.getSource()==cancel){
+                                moveSection.close();
+                            }
+                            if(event.getSource()==save||(name.getText()!="")){
+                                Task tempTask = tasks.getSelectionModel().getSelectedItem();
+                                String sName = name.getText();
+                                if(list.getSection(sName)==null){
+                                    list.addSection(sName);
+                                    list.getSection(sName).addTask(tempTask);
+                                }else{list.getSection(sName).addTask(tempTask); }
+                                list.getSection(sectionName).deleteTask(tempTask);
+                                IOManager.saveUser(App.getUser());
+                                App.setState(new TaskPageState(stage,list.getName(),sectionName));
+                                moveSection.close();
+                            }
+
+                        }
+                    };
+                    cancel.setOnMouseClicked(handler1);
+                    save.setOnMouseClicked(handler1);
+                }
             }
         };
         back.setOnMouseClicked(handler);
@@ -474,6 +598,9 @@ public class TaskPageState implements UIState{
         prioritySort.setOnMouseClicked(handler);
         completedSort.setOnMouseClicked(handler);
         dueDateSort.setOnMouseClicked(handler);
+        viewTask.setOnMouseClicked(handler);
+        moveList.setOnMouseClicked(handler);
+        moveSection.setOnMouseClicked(handler);
     }
 
 
