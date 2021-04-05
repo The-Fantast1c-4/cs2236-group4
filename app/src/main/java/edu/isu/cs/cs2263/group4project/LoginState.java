@@ -40,7 +40,7 @@ public class LoginState implements UIState {
         stage.setTitle("Login");
         Button logIN = new Button("Log in");
         Button signUp = new Button("Sign up");
-        TextField userName = new TextField("mistryman");
+        TextField userName = new TextField("Username");
         PasswordField passwordField = new PasswordField();
         Label unLabel = new Label("User Name:");
         Label passLabel = new Label("Password:");

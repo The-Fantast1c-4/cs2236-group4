@@ -1,6 +1,2 @@
 edu/isu/cs/cs2263/group4project/AppTest.java
  edu.isu.cs.cs2263.group4project.AppTest
-edu/isu/cs/cs2263/group4project/BackendTests.java
- edu.isu.cs.cs2263.group4project.BackendTests
-edu/isu/cs/cs2263/group4project/TestScripts.java
- edu.isu.cs.cs2263.group4project.TestScripts
