@@ -142,7 +142,7 @@ public class Task {
     }
 
     public Task clone() {
-        return this.clone();
+        return new Task(this.name, this.priority, this.description, this.dueDate);
     }
 
     public void accept(Visitor v){
