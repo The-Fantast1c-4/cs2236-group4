@@ -75,7 +75,7 @@ public class TaskPageState implements UIState{
         TableColumn<Task, String> taskColumn = new TableColumn<>("Task");
         taskColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         tasks.getColumns().add(taskColumn);
-        tasks.getItems().addAll(App.getUser().getLists().getList(list.getName()).getSection(sectionName).getTasks());
+        tasks.getItems().addAll(list.getSection(sectionName).getTasks());
 
 
 
@@ -362,8 +362,8 @@ public class TaskPageState implements UIState{
                 }
                 if (event.getSource()==duplicate){
                     Task tempTask = tasks.getSelectionModel().getSelectedItem();
-                    Task newTask = list.getSection(sectionName).cloneTask(tempTask);
-                    list.getSection(sectionName).addTask(newTask);
+                    list.getSection(sectionName).cloneTask(tempTask);
+
                     tasks.getItems().add(tempTask);
                 }
                 if(event.getSource()==addSublist) {
@@ -421,6 +421,38 @@ public class TaskPageState implements UIState{
                 if(event.getSource()==subLists){
                     //App.setState(new SLTaskPageState(stage,list.getName(),subLists.getFocusModel().getFocusedItem().getName()));
                 }
+                if(event.getSource()==labelSort){
+                    prioritySort.setSelected(false);
+                    completedSort.setSelected(false);
+                    dueDateSort.setSelected(false);
+                    ArrayList<Task> sortedTasks = Filter.sortBy(list.getSection(sectionName), "label");
+                    tasks.getItems().clear();
+                    tasks.getItems().addAll(sortedTasks);
+                }
+                if(event.getSource()==prioritySort){
+                    labelSort.setSelected(false);
+                    completedSort.setSelected(false);
+                    dueDateSort.setSelected(false);
+                    ArrayList<Task> sortedTasks = Filter.sortBy(list.getSection(sectionName), "priority");
+                    tasks.getItems().clear();
+                    tasks.getItems().addAll(sortedTasks);
+                }
+                if(event.getSource()==completedSort){
+                    prioritySort.setSelected(false);
+                    labelSort.setSelected(false);
+                    dueDateSort.setSelected(false);
+                    ArrayList<Task> sortedTasks = list.getSection(sectionName).getCompletedTasks();
+                    tasks.getItems().clear();
+                    tasks.getItems().addAll(sortedTasks);
+                }
+                if(event.getSource()==dueDateSort){
+                    prioritySort.setSelected(false);
+                    completedSort.setSelected(false);
+                    labelSort.setSelected(false);
+                    ArrayList<Task> sortedTasks = Filter.sortBy(list.getSection(sectionName), "date");
+                    tasks.getItems().clear();
+                    tasks.getItems().addAll(sortedTasks);
+                }
             }
         };
         back.setOnMouseClicked(handler);
@@ -438,6 +470,10 @@ public class TaskPageState implements UIState{
         duplicate.setOnMouseClicked(handler);
         addSublist.setOnMouseClicked(handler);
         subLists.setOnMouseClicked(handler);
+        labelSort.setOnMouseClicked(handler);
+        prioritySort.setOnMouseClicked(handler);
+        completedSort.setOnMouseClicked(handler);
+        dueDateSort.setOnMouseClicked(handler);
     }
 
 
