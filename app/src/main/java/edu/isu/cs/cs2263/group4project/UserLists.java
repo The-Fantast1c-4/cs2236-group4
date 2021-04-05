@@ -2,6 +2,8 @@ package edu.isu.cs.cs2263.group4project;
 
 import java.util.ArrayList;
 
+// UserLists houses all of the user's lists at once and allows for some specific methods for changing lists
+
 public class UserLists {
     /* Arraylist to store List   */
     private ArrayList<List> lists;

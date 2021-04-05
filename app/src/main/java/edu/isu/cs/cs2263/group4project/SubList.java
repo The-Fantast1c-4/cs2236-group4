@@ -1,5 +1,7 @@
 package edu.isu.cs.cs2263.group4project;
 
+// Sublists are the same as lists, however sublists cannot themselves also have sublists, so methods are overriden
+
 public class SubList extends List {
     public SubList(String name, String description){
         super(name, description);
