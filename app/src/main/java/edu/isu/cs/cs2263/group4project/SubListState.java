@@ -1,7 +1,5 @@
 package edu.isu.cs.cs2263.group4project;
 
-import com.google.common.collect.ForwardingTable;
-import com.google.common.collect.Table;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -21,20 +19,23 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class TaskPageState implements UIState{
+public class SubListState implements UIState{
     private Stage stage;
-    private List list;
+    private SubList list;
+    private List superList;
     private String sectionName = "Default Section";
 
-    public TaskPageState(Stage stage,String list,String section){
-        this.list = App.getUser().getLists().getList(list);
+    public SubListState(Stage stage, String list,String sublist, String section){
+        this.superList = App.getUser().getLists().getList(list);
+        this.list = superList.getSublist(sublist);
         this.stage = stage;
         this.sectionName = section;
     }
 
 
-    public TaskPageState(Stage stage,String list) {
-        this.list = App.getUser().getLists().getList(list);
+    public SubListState(Stage stage, String list, String sublist) {
+        this.superList = App.getUser().getLists().getList(list);
+        this.list = superList.getSublist(sublist);
         this.stage = stage;
     }
 
@@ -63,7 +64,7 @@ public class TaskPageState implements UIState{
         Button viewTask = new Button("View Task");
 
         ArrayList<Label> sections = new ArrayList<>();
-        for(Section sect: App.getUser().getLists().getList(list.getName()).getSections()){
+        for(Section sect: list.getSections()){
             sections.add(new Label(sect.getName()));
         }
         for(Label label : sections){
@@ -105,14 +106,9 @@ public class TaskPageState implements UIState{
         if(!list.isArchived()){
             archiveList.setText("Archive List");
         }else{archiveList.setText("UnArchive List");}
-        Button addSublist = new Button("Add Sublist");
         Button deleteSection = new Button("Delete Section");
         Button deleteList = new Button("Delete List");
 
-        Label subListLabel = new Label("Sublists");
-
-        ObservableList<SubList> subListsList = FXCollections.observableArrayList(list.getSubLists());
-        ListView<SubList> subLists = new ListView<SubList>(subListsList);
 
 
         //create Layout
@@ -133,7 +129,7 @@ public class TaskPageState implements UIState{
         taskBox.getChildren().addAll(sectionLabels,tasks);
         topButtonBar.getChildren().addAll(delete,moveList,moveSection,duplicate,viewTask);
         commentBox.getChildren().addAll(comments,addComment);
-        rightSide.getChildren().addAll(commentBox,sorting,labelSort,prioritySort,dueDateSort,completedSort,subListLabel,subLists,addSublist);
+        rightSide.getChildren().addAll(commentBox,sorting,labelSort,prioritySort,dueDateSort,completedSort);
         leftSide.getChildren().addAll(topButtonBar,taskBox,bottomButtonBar);
         body.getChildren().addAll(leftSide,rightSide);
         topBar.getChildren().addAll(searchButton,searchBar,back,logOut);
@@ -150,7 +146,6 @@ public class TaskPageState implements UIState{
         leftSide.setSpacing(10);
         tasks.setMinWidth(500);
         taskBox.setSpacing(15);
-        subLists.setMaxSize(100000,200);
         topButtonBar.setSpacing(2);
         bottomButtonBar.setSpacing(10);
         //fill info
@@ -170,7 +165,6 @@ public class TaskPageState implements UIState{
 
         makeTask.setStyle("-fx-background-color: #e48257");
         addSection.setStyle("-fx-background-color: #e48257");
-        addSublist.setStyle("-fx-background-color: #e48257");
         archiveList.setStyle("-fx-background-color: #e48257");
         deleteSection.setStyle("-fx-background-color: #e48257");
         deleteList.setStyle("-fx-background-color: #e48257");
@@ -188,7 +182,7 @@ public class TaskPageState implements UIState{
             @Override
             public void handle(MouseEvent event) {
                 if(event.getSource()==back){
-                    App.setState(new HomePageState(stage));
+                    App.setState(new TaskPageState(stage,superList.getName()));
                 }
                 if(event.getSource()==logOut){
                     App.setUser(null);
@@ -312,7 +306,7 @@ public class TaskPageState implements UIState{
                                 IOManager.saveUser(App.getUser());
                                 sectionLabels.getChildren().add(new Label(sName));
                                 newSection.close();
-                                App.setState(new TaskPageState(stage, list.getName(),sName));
+                                App.setState(new SubListState(stage, list.getName(),sName));
                             }
 
                         }
@@ -358,13 +352,13 @@ public class TaskPageState implements UIState{
                     Task tempTask = tasks.getSelectionModel().getSelectedItem();
                     App.getUser().getLists().getList(list.getName()).getSection(sectionName).deleteTask(tempTask);
                     IOManager.saveUser(App.getUser());
-                    App.setState(new TaskPageState(stage,list.getName(),sectionName));
+                    App.setState(new SubListState(stage,list.getName(),sectionName));
 
                 }
                 if (event.getSource()==deleteSection){
                     list.deleteSection(list.getSection(sectionName));
                     IOManager.saveUser(App.getUser());
-                    App.setState(new TaskPageState(stage,list.getName()));
+                    App.setState(new SubListState(stage,superList.getName(),list.getName()));
                 }
                 if (event.getSource()==deleteList){
                     App.getUser().getLists().deleteList(list);
@@ -377,61 +371,7 @@ public class TaskPageState implements UIState{
 
                     tasks.getItems().add(tempTask);
                 }
-                if(event.getSource()==addSublist) {
-                    Stage newList = new Stage();
-                    newList.setTitle("New Sub List");
-                    //create nodes
-                    TextField name = new TextField();
-                    name.setPromptText("Name");
-                    TextField description = new TextField();
-                    description.setPromptText("Description");
-                    Button save = new Button("Save");
-                    Button cancel = new Button("Cancel");
 
-                    //create containers
-                    HBox buttonBox = new HBox();
-                    VBox main = new VBox();
-
-                    //fill containers
-                    buttonBox.getChildren().addAll(save,cancel);
-                    main.getChildren().addAll(name,description,buttonBox);
-
-
-                    newList.setX(stage.getX() + (stage.getWidth() / 2) - 200);
-                    newList.setY(stage.getY() + (stage.getHeight() / 2) - 150);
-                    newList.setWidth(400);
-                    newList.setHeight(300);
-
-                    newList.setScene(new Scene(main));
-                    newList.show();
-
-                    main.setStyle("-fx-background-color: #f2edd7");
-                    save.setStyle("-fx-background-color: #e48257");
-                    cancel.setStyle("-fx-background-color: #e48257");
-
-                    EventHandler<MouseEvent> handler1 = new EventHandler<MouseEvent>() {
-                        @Override
-                        public void handle(MouseEvent event) {
-                            if(event.getSource()==cancel){
-                                newList.close();
-                            }
-                            if(event.getSource()==save||(name.getText()!="")){
-                                String sName = name.getText();
-                                String sDescription = description.getText();
-                                list.addSubList(sName,sDescription);
-                                IOManager.saveUser(App.getUser());
-                                subLists.getItems().add(list.getSublist(sName));
-                                newList.close();
-                            }
-
-                        }
-                    };
-                    cancel.setOnMouseClicked(handler1);
-                    save.setOnMouseClicked(handler1);
-                }
-                if(event.getSource()==subLists){
-                    //App.setState(new SLTaskPageState(stage,list.getName(),subLists.getFocusModel().getFocusedItem().getName()));
-                }
                 if(event.getSource()==labelSort){
                     prioritySort.setSelected(false);
                     completedSort.setSelected(false);
@@ -508,13 +448,13 @@ public class TaskPageState implements UIState{
                             if(event.getSource()==save||(name.getText()!="")){
                                 Task tempTask = tasks.getSelectionModel().getSelectedItem();
                                 String sName = name.getText();
-                                if(App.getUser().getLists().getList(sName)==null){
-                                    App.getUser().getLists().makeList(sName,"");
-                                    App.getUser().getLists().getList(sName).getSection(0).addTask(tempTask);
+                                if(superList.getSublist(sName)==null){
+                                    superList.addSubList(sName,"");
+                                    superList.getSublist(sName).getSection(0).addTask(tempTask);
                                 }else{App.getUser().getLists().getList(sName).getSection(0).addTask(tempTask); }
                                 list.getSection(sectionName).deleteTask(tempTask);
                                 IOManager.saveUser(App.getUser());
-                                App.setState(new TaskPageState(stage,list.getName(),sectionName));
+                                App.setState(new SubListState(stage,list.getName(),sectionName));
                                 moveList.close();
                             }
 
@@ -569,7 +509,7 @@ public class TaskPageState implements UIState{
                                 }else{list.getSection(sName).addTask(tempTask); }
                                 list.getSection(sectionName).deleteTask(tempTask);
                                 IOManager.saveUser(App.getUser());
-                                App.setState(new TaskPageState(stage,list.getName(),sectionName));
+                                App.setState(new SubListState(stage,list.getName(),sectionName));
                                 moveSection.close();
                             }
 
@@ -618,17 +558,13 @@ public class TaskPageState implements UIState{
                             if(event.getSource()==save||(name.getText()!="")){
                                 list.addComment(new Comment(name.getText()));
                                 IOManager.saveUser(App.getUser());
-                                App.setState(new TaskPageState(stage,list.getName(),sectionName));
+                                App.setState(new SubListState(stage,list.getName(),sectionName));
                             }
 
                         }
                     };
                     cancel.setOnMouseClicked(handler1);
                     save.setOnMouseClicked(handler1);
-                }
-                if(event.getSource()==subLists){
-                    List subList = subLists.getSelectionModel().getSelectedItem();
-                    App.setState(new SubListState(stage,list.getName(),subList.getName()));
                 }
             }
         };
@@ -645,8 +581,6 @@ public class TaskPageState implements UIState{
         deleteSection.setOnMouseClicked(handler);
         deleteList.setOnMouseClicked(handler);
         duplicate.setOnMouseClicked(handler);
-        addSublist.setOnMouseClicked(handler);
-        subLists.setOnMouseClicked(handler);
         labelSort.setOnMouseClicked(handler);
         prioritySort.setOnMouseClicked(handler);
         completedSort.setOnMouseClicked(handler);
@@ -655,7 +589,6 @@ public class TaskPageState implements UIState{
         moveList.setOnMouseClicked(handler);
         moveSection.setOnMouseClicked(handler);
         addComment.setOnMouseClicked(handler);
-        subLists.setOnMouseClicked(handler);
     }
 
 
