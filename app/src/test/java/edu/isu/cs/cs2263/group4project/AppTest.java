@@ -54,14 +54,14 @@ class AppTest {
         def.addTask("Test 2", 2, "a");
         def.addTask("Test 3", 7, "aa");
 
-        ArrayList<Task> sorted = Filter.sortBy(list, "priority");
+        ArrayList<Task> sorted = Filter.sortBy(def, "priority");
         assertEquals(def.getTask("Test 2"), sorted.get(0));
 
         def.getTask("Test 1").addLabel("b");
         def.getTask("Test 2").addLabel("a");
         def.getTask("Test 3").addLabel("aa");
 
-        sorted = Filter.sortBy(list, "label");
+        sorted = Filter.sortBy(def, "label");
         assertEquals(def.getTask("Test 3"), sorted.get(1));
     }
 

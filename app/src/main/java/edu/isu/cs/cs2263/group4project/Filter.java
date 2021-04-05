@@ -5,47 +5,45 @@ import java.util.Collections;
 
 public class Filter {
 
-    protected static ArrayList<Task> getListElements(List list){
+    protected static ArrayList<Task> getListElements(Section section){
         ArrayList<Task> listElements = new ArrayList<>();
-        for (Section section : list.getSections()) {
-            for (Task task : section.getTasks()) {
-                listElements.add(task);
-                listElements.addAll(task.getSubTasks());
-            }
+        for (Task task : section.getTasks()) {
+            listElements.add(task);
+            listElements.addAll(task.getSubTasks());
         }
         return listElements;
     }
 
-    public static ArrayList<Task> sortBy(List list, String sortTerm){
+    public static ArrayList<Task> sortBy(Section section, String sortTerm){
         switch (sortTerm) {
             case "label":
-                return sortByLabel(list);
+                return sortByLabel(section);
             case "priority":
-                return sortByPriority(list);
+                return sortByPriority(section);
             case "date":
-                return sortByDate(list);
+                return sortByDate(section);
             default:
                 return null;
         }
     }
 
-    public static ArrayList<Task> sortByLabel(List list){
+    public static ArrayList<Task> sortByLabel(Section section){
         //sort list by tag
-        ArrayList<Task> tasks = getListElements(list);
+        ArrayList<Task> tasks = getListElements(section);
         Collections.sort(tasks, new ComparatorLabel());
         return tasks;
     }
 
-    public static ArrayList<Task> sortByPriority(List list){
+    public static ArrayList<Task> sortByPriority(Section section){
         //sort list by priority
-        ArrayList<Task> tasks = getListElements(list);
+        ArrayList<Task> tasks = getListElements(section);
         Collections.sort(tasks, new ComparatorPriority());
         return tasks;
     }
 
-    public static ArrayList<Task> sortByDate(List list){
+    public static ArrayList<Task> sortByDate(Section section){
         //sort list by due date
-        ArrayList<Task> tasks = getListElements(list);
+        ArrayList<Task> tasks = getListElements(section);
         Collections.sort(tasks, new ComparatorDate());
         return tasks;
     }

@@ -101,7 +101,7 @@ public class Command {
         // After doing this, you must call IOManager.saveUser(currentUser);
     }
 
-    public static void SortList(List workingList, String searchBy){
+    public static void SortList(Section workingList, String searchBy){
         // Options for searchBy: "label", "priority", "date"
         ArrayList<Task> sortedTasks = Filter.sortBy(workingList, searchBy);
     }
