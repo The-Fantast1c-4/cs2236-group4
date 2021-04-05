@@ -5,15 +5,40 @@ import java.util.ArrayList;
 public class Admin extends User{
 
     public Admin(){
-        super(new UserInfo("admin", "System", "Admin", "SysAdmin",
+
+    }
+
+    public Admin(UserInfo info) {
+
+    }
+
+    public void initializeAdmin() {
+        setUserInfo(new UserInfo("admin", "System", "Admin", "SysAdmin",
                 "admin@admin.com", "admin", "admin"));
 
         IOManager.saveUser(this);
         IOManager.saveUserMacro(this.getUserInfo());
     }
 
-    public void changeAdminPassword(String password){
-        this.getUserInfo().setPassword(password);
+    public boolean changeAdminPassword(String password){
+        String username = "admin";
+        ArrayList<UserInfo> users = getAllUsers();
+        UserInfo thisUser = null;
+        for (UserInfo user : users) {
+            if (user.getUsername().equals(username)) {
+                thisUser = user;
+                break;
+            }
+        }
+        if (thisUser == null){
+            return false;
+        }
+        thisUser.setPassword(password);
+        IOManager.saveUserMacro(thisUser);
+        StandardUser user = IOManager.loadStandardUser(username, password);
+        user.setUserInfo(thisUser);
+        IOManager.saveUser(user);
+        return true;
     }
 
     public ArrayList<UserInfo> getAllUsers(){
@@ -34,9 +59,17 @@ public class Admin extends User{
         }
         thisUser.setPassword(password);
         IOManager.saveUserMacro(thisUser);
-        StandardUser user = IOManager.loadStandardUser(username, password);
-        user.setUserInfo(thisUser);
-        IOManager.saveUser(user);
+
+        if (thisUser.getUsername().equals("admin")) {
+            Admin user = IOManager.loadAdmin(password);
+            user.setUserInfo(thisUser);
+            IOManager.saveUser(user);
+        } else {
+            StandardUser user = IOManager.loadStandardUser(username, password);
+            user.setUserInfo(thisUser);
+            IOManager.saveUser(user);
+        }
+
         return true;
     }
 

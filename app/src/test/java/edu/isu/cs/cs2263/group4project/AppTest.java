@@ -40,6 +40,10 @@ class AppTest {
         admin.changeUserPassword("mistryman", "hereishispassword");
         assertNotNull(IOManager.loadStandardUser("mistryman", "hereishispassword"));
 
+        // Test 3: changeAdminPassword()
+        assertTrue(admin.changeUserPassword("admin", "newpass"));
+        assertEquals(IOManager.loadAdmin("newpass").getUserInfo().getUsername(), "admin");
+        assertTrue(admin.changeUserPassword("admin", "admin"));
     }
 
     @Test
@@ -82,6 +86,7 @@ class AppTest {
         assertTrue(IOManager.loadUserMacro().contains(newUser));
         assertNotNull(IOManager.loadStandardUser("spierob2", "password"));
 
-
+        // Test 3: loadAdmin()
+        assertNotNull(IOManager.loadAdmin("admin").getUserInfo().getUsername(), "admin");
     }
 }

@@ -116,12 +116,7 @@ public class IOManager {
         } catch (Exception e) {
             macros = new ArrayList<>();
         }
-        for (UserInfo user : macros){
-            if (user.getUsername().equals(info.getUsername())){
-                macros.remove(user);
-                break;
-            }
-        }
+        macros.removeIf(user -> user.getUsername().equals(info.getUsername()));
         macros.add(info);
         saveUserMacro(macros);
 
@@ -138,7 +133,14 @@ public class IOManager {
         Gson gson = new Gson();
         StandardUser user = gson.fromJson(json, StandardUser.class);
 
+        if (authenticate(username, password)) {
+            return user;
+        }
 
+        return null;
+    }
+
+    private static boolean authenticate(String username, String password) {
         ArrayList<UserInfo> infos = loadUserMacro();
         UserInfo myInfo = null;
         for (UserInfo info : infos) {
@@ -147,12 +149,12 @@ public class IOManager {
             }
         }
         if (myInfo == null) {
-            return null;
+            return false;
         }
         if (!myInfo.attemptLogin(password)){
-            return null;
+            return false;
         }
-        return user;
+        return true;
     }
 
     public static Admin loadAdmin(String password){
@@ -165,10 +167,10 @@ public class IOManager {
         }
         Gson gson = new Gson();
         Admin user = gson.fromJson(json, Admin.class);
-        if (!user.attemptLogin(password)){
-            return null;
+        if (authenticate("admin", password)){
+            return user;
         }
-        return user;
+        return null;
     }
 
     public static void saveUser(User user){
