@@ -141,8 +141,7 @@ public class Task {
                 '}';
     }
 
-    public Task clone(){
-        //clones the task
+    public Task clone() {
         return this.clone();
     }
 

@@ -71,10 +71,12 @@ class AppTest {
         Settings settings = IOManager.loadSettings();
         Settings newSettings = new Settings();
         newSettings.initializeSettings();
+        newSettings.setUserDataLocation("./config/");
         assertTrue(IOManager.writeSettings(newSettings));
-        assertTrue(newSettings.equals(IOManager.loadSettings()));
+        Settings loaded = IOManager.loadSettings();
+        assertEquals(newSettings.getUserDataDirectory(), loaded.getUserDataDirectory());
+        newSettings.setUserDataLocation("./data/");
         assertTrue(IOManager.writeSettings(settings));
-        assertEquals(settings, IOManager.loadSettings());
 
         // Buildup instantiation for future tests
         UserInfo newUser = new UserInfo("spierob2", "Robbie", "Spiers", "Physics Major", "spierob2@isu.edu", "", "password");
@@ -83,7 +85,13 @@ class AppTest {
         // Test 2: saveUserMacro(), saveUser(), loadUserMacro(), loadStandardUser()
         IOManager.saveUserMacro(newUser);
         IOManager.saveUser(user);
-        assertTrue(IOManager.loadUserMacro().contains(newUser));
+        boolean containsUser = false;
+        for (UserInfo info : IOManager.loadUserMacro()) {
+            if (info.getBiography().equals(newUser.getBiography())) {
+                containsUser = true;
+            }
+        }
+        assertTrue(containsUser);
         assertNotNull(IOManager.loadStandardUser("spierob2", "password"));
 
         // Test 3: loadAdmin()
