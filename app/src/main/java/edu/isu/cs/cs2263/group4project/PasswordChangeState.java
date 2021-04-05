@@ -75,17 +75,13 @@ public class PasswordChangeState implements UIState  {
                     String user =userFirstLast.getText();
                     String newPass=password.getText();
 
-                    if (user=="admin") {
-                        Admin admin = App.getAdmin();
-                        admin.changeAdminPassword(newPass);
+                    Admin admin=App.getAdmin();
+                    if (admin.changeUserPassword(user,newPass)){
+                        System.out.println("Password Change successful");
                     } else {
-                        Admin admin=App.getAdmin();
-                        if (admin.changeUserPassword(user,newPass)){
-                            System.out.println("Password Change successful");
-                        } else {
-                            System.out.println("Password Change NOT successful");
-                        }
+                        System.out.println("Password Change NOT successful");
                     }
+
                 }else {
                     if (event.getSource()==exit){
                         App.setState(new AdminState(stage));
