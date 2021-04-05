@@ -37,6 +37,11 @@ public class List {
     public ArrayList<Comment> getComments() {
         return comments;
     }
+
+    public ArrayList<SubList> getSubLists() {
+        return subLists;
+    }
+
 //setter methods
 
     public void setName(String name) {
@@ -58,6 +63,16 @@ public class List {
     }
     public Section getSection(int secNum){
         return sections.get(secNum);
+    }
+
+    public SubList getSublist(String name){
+        //returns sublist with name
+        for(SubList subList: subLists){
+            if(subList.getName().equals(name)){
+                return subList;
+            }
+        }
+        return null;
     }
 
     public void archive(){
