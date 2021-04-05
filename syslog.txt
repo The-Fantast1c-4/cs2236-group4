@@ -1,0 +1,6 @@
+This is the first test text to write to the log.
+Let us try a second one
+2021/03/25 18:25:26;    Let us try a second one
+2021/03/25 19:06:41;    This is the init task.
+2021/03/25 19:07:34;    This is the init task.
+2021/03/25 19:07:48;    This is the init task.
