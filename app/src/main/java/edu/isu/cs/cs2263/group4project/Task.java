@@ -141,9 +141,8 @@ public class Task {
                 '}';
     }
 
-    public Task clone(){
-        //clones the task
-        return this.clone();
+    public Task clone() {
+        return new Task(this.name, this.priority, this.description, this.dueDate);
     }
 
     public void accept(Visitor v){

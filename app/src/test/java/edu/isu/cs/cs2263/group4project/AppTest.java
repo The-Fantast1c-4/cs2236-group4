@@ -32,15 +32,69 @@ class AppTest {
 
         // Test 1: getAllUsers()
         assertNotNull(admin.getAllUsers());
-        ArrayList<UserInfo> infos = admin.getAllUsers();
-        assertEquals(infos.get(0).getUsername(), "admin");
+        assertNotNull(admin.getAllUsers());
 
         // Test 2: changeUserPassword()
-        admin.changeUserPassword("mistryman", "newpassword");
+        assertTrue(admin.changeUserPassword("mistryman", "newpassword"));
         assertNotNull(IOManager.loadStandardUser("mistryman", "newpassword"));
         admin.changeUserPassword("mistryman", "hereishispassword");
         assertNotNull(IOManager.loadStandardUser("mistryman", "hereishispassword"));
 
-        // Test 3:
+        // Test 3: changeAdminPassword()
+        assertTrue(admin.changeUserPassword("admin", "newpass"));
+        assertEquals(IOManager.loadAdmin("newpass").getUserInfo().getUsername(), "admin");
+        assertTrue(admin.changeUserPassword("admin", "admin"));
+    }
+
+    @Test
+    void filterTests() {
+        List list = new List("TestList", "List for testing");
+        Section def = list.getSection("Default Section");
+        def.addTask("Test 1", 4, "b");
+        def.addTask("Test 2", 2, "a");
+        def.addTask("Test 3", 7, "aa");
+
+        ArrayList<Task> sorted = Filter.sortBy(def, "priority");
+        assertEquals(def.getTask("Test 2"), sorted.get(0));
+
+        def.getTask("Test 1").addLabel("b");
+        def.getTask("Test 2").addLabel("a");
+        def.getTask("Test 3").addLabel("aa");
+
+        sorted = Filter.sortBy(def, "label");
+        assertEquals(def.getTask("Test 3"), sorted.get(1));
+    }
+
+    @Test
+    void IOManagerTests() {
+        // Test 1: writeSettings(), loadSettings()
+        Settings settings = IOManager.loadSettings();
+        Settings newSettings = new Settings();
+        newSettings.initializeSettings();
+        newSettings.setUserDataLocation("./config/");
+        assertTrue(IOManager.writeSettings(newSettings));
+        Settings loaded = IOManager.loadSettings();
+        assertEquals(newSettings.getUserDataDirectory(), loaded.getUserDataDirectory());
+        newSettings.setUserDataLocation("./data/");
+        assertTrue(IOManager.writeSettings(settings));
+
+        // Buildup instantiation for future tests
+        UserInfo newUser = new UserInfo("spierob2", "Robbie", "Spiers", "Physics Major", "spierob2@isu.edu", "", "password");
+        StandardUser user = new StandardUser(newUser);
+
+        // Test 2: saveUserMacro(), saveUser(), loadUserMacro(), loadStandardUser()
+        IOManager.saveUserMacro(newUser);
+        IOManager.saveUser(user);
+        boolean containsUser = false;
+        for (UserInfo info : IOManager.loadUserMacro()) {
+            if (info.getBiography().equals(newUser.getBiography())) {
+                containsUser = true;
+            }
+        }
+        assertTrue(containsUser);
+        assertNotNull(IOManager.loadStandardUser("spierob2", "password"));
+
+        // Test 3: loadAdmin()
+        assertNotNull(IOManager.loadAdmin("admin").getUserInfo().getUsername(), "admin");
     }
 }

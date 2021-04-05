@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -33,7 +34,7 @@ public class PasswordChangeState implements UIState  {
         Button changePassword = new Button("Change Password");
         Button exit = new Button("Exit   ");
         TextField userFirstLast = new TextField();
-        userFirstLast.setPromptText("FirstName LastName");
+        userFirstLast.setPromptText("User Name");
         PasswordField password = new PasswordField();
         PasswordField verification = new PasswordField();
         PasswordField adminPassword = new PasswordField();
@@ -59,10 +60,38 @@ public class PasswordChangeState implements UIState  {
         gridPane.add(changePassword,0,4);
         gridPane.add(exit,1,4);
 
+
+
         //color of bittons and background
         changePassword.setStyle("-fx-background-color: #e48257;");
         exit.setStyle("-fx-background-color: #e48257;");
         gridPane.setStyle("-fx-background-color: #f2edd7;");
+
+
+        EventHandler<MouseEvent> handler = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getSource()==changePassword){
+                    String user =userFirstLast.getText();
+                    String newPass=password.getText();
+
+                    Admin admin=App.getAdmin();
+                    if (admin.changeUserPassword(user,newPass)){
+                        System.out.println("Password Change successful");
+                    } else {
+                        System.out.println("Password Change NOT successful");
+                    }
+
+                }else {
+                    if (event.getSource()==exit){
+                        App.setState(new AdminState(stage));
+                    }
+                }
+
+            }
+        };
+        changePassword.setOnMouseClicked(handler);
+        exit.setOnMouseClicked(handler);
 
         //adding layout to the scene
         Scene scene = new Scene(gridPane,1000,600);
