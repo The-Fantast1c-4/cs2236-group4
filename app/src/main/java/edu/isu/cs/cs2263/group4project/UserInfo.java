@@ -4,7 +4,11 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Arrays;
 
+// UserInfo is the profile information of every single User
+// This also allows users to log in to the program since it holds their password
+
 public class UserInfo {
+    // Fields
     private String firstName;
     private String lastName;
     private String username;
@@ -13,6 +17,7 @@ public class UserInfo {
     private byte[] hashedPassword;
     private String pathToPicture;
 
+    // Construct a profile for a new user
     public UserInfo(String username, String firstName, String lastName, String bio, String email, String pathToPicture, String password){
         this.username = username;
         this.firstName = firstName;
@@ -23,6 +28,7 @@ public class UserInfo {
         setPassword(password);
     }
 
+    // Basic getter and setter methods
     public String getFirstName(){return firstName;}
     public String getLastName(){return lastName;}
     public String getUsername(){return username;}
@@ -34,6 +40,7 @@ public class UserInfo {
     public void setBiography(String biography) {this.biography = biography;}
 
 
+    // Privately hashes a given password using SHA-512 encryption (unsalted)
     private byte[] hashPassword(String password){
         // Hash the password here
 
@@ -46,14 +53,17 @@ public class UserInfo {
         }
     }
 
+    // Returns the hashed password privately to attemptLogin()
     private byte[] getHashedPassword(){
         return hashedPassword;
     }
 
+    // Sets a new password. This method is only accessible to the Admin through the UI
     public void setPassword(String password){
         this.hashedPassword = hashPassword(password);
     }
 
+    // Checks to see if the hashing of the attempted password is equal to the original hashed password
     public boolean attemptLogin(String password){
         byte[] attempt = hashPassword(password);
         return Arrays.equals(getHashedPassword(), attempt);

@@ -1,5 +1,7 @@
 package edu.isu.cs.cs2263.group4project;
 
+// This class holds the comments that users can apply to their Lists
+// One could also just use a string for this
 
 public class Comment {
     private String comment;

@@ -2,6 +2,9 @@ package edu.isu.cs.cs2263.group4project;
 
 import java.util.ArrayList;
 
+// The list object contains the Project the user has specified
+// Inside of each list object are sections, and these sections contain the tasks
+
 public class List {
     private String name;
     private String description;
@@ -52,21 +55,26 @@ public class List {
         this.description = description;
     }
 
+
+    // Get one specific section that corresponds to the desired name
     public Section getSection(String name){
-        //returns section with name
+        // Search through the sections until the name matches
         for(Section section: sections){
             if(section.getName().equals(name)){
                 return section;
             }
         }
+        // If no match, then return null
         return null;
     }
+    // Get the section corresponding to a specific number
     public Section getSection(int secNum){
         return sections.get(secNum);
     }
 
+    // Get a sublist with a specific name
     public SubList getSublist(String name){
-        //returns sublist with name
+        // Search the sublists to find the one with the correct name
         for(SubList subList: subLists){
             if(subList.getName().equals(name)){
                 return subList;
@@ -87,7 +95,10 @@ public class List {
     public void addComment(Comment comment){
         comments.add(comment);
     }
+
+    // Create a new section and add it to the list of sections
     public boolean addSection(String sectionName){
+        // First we must make sure that a section with this name does not already exist
         boolean nameExists = false;
         for(Section section: sections){
             if(section.getName().equals(sectionName)){
@@ -95,17 +106,22 @@ public class List {
             }
         }
         if (nameExists){
-            // Need to handle what happens if user attempts to recreate existing name, do we overwrite?
+            // If a section of a given name already exists, the program will not create the section
             return false;
         } else {
+            // Otherwise, create a new section and add it to the list
             sections.add(new Section(sectionName));
             return true;
         }
     }
+    // Alternatively, we can directly add a section to a list
     public void addSection(Section section){
         sections.add(section);
     }
+
+    // Create a new SubList (or subProject) and add it to the current List
     public boolean addSubList(String subListName, String subListDesc){
+        // First, we must make sure that a sublist with this name does not already exist
         boolean nameExists = false;
         for(SubList subList: subLists){
             if(subList.getName().equals(subListName)){
@@ -113,7 +129,7 @@ public class List {
             }
         }
         if (nameExists){
-            // Need to handle what happens if user attempts to recreate existing name, do we overwrite?
+            // If the name already exists, do not create the sublist
             return false;
         } else {
             subLists.add(new SubList(subListName, subListDesc));
@@ -125,12 +141,15 @@ public class List {
     }
 
 
+    // Delete a comment from the list
     public void deleteComment(Comment comment){
         boolean wasRemoved = comments.remove(comment);
         if (!wasRemoved){
             throw new Error("Specified comment was not found in the list of comments.");
         }
     }
+
+    // Delete a section from the list
     public void deleteSection(Section section){
         // deletes a section
         boolean wasRemoved = sections.remove(section);
@@ -138,6 +157,8 @@ public class List {
             throw new Error("Specified section was not found in the list of sections");
         }
     }
+
+    // Delete a sublist from the list
     public void deletesSubList(SubList subList){
         // deletes a sublist
         boolean wasRemoved = subLists.remove(subList);
@@ -146,6 +167,7 @@ public class List {
         }
     }
 
+    // Allows us to implement the visitor pattern. Passes this object onto the visitor
     public void accept(Visitor v){
         v.visit(this);
     }

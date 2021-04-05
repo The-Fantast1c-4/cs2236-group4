@@ -3,7 +3,10 @@ package edu.isu.cs.cs2263.group4project;
 import java.util.ArrayList;
 import java.util.Date;
 
+// Tasks encode our to-do information, such as a priority specification and a due date
+
 public class Task {
+    // Fields
     private String name;
     private int priority;
     private String description;
@@ -12,6 +15,7 @@ public class Task {
     private ArrayList<String> labels = new ArrayList<>();
     private ArrayList<SubTask> subTasks = new ArrayList<>();
 
+    // Constructor with a specific due date
     public Task(String name, int priority, String description, Date dueDate) {
         this.name = name;
         this.priority = priority;
@@ -20,6 +24,8 @@ public class Task {
         this.complete = false;
     }
 
+    // Constructor without a specific due date
+    // Default due date is today
     public Task(String name, int priority, String description) {
         this.name = name;
         this.priority = priority;
@@ -81,10 +87,13 @@ public class Task {
         complete = false;
     }
 
+    // Check to see if the task is overdue
     public boolean isOverDue() {
         //returns true if overdue
         return dueDate.after(new Date());       // Date() constructor automatically sets the time to the current time
     }
+
+    // Add a new label
     public void addLabel(String label){
         //adds label
         labels.add(label);
@@ -97,7 +106,10 @@ public class Task {
         //adds a subTask
         subTasks.add(subTask);
     }
+
+    // Construct a new sub task
     public boolean addSubTask(String taskName, int priority, String description, Date dueDate){
+        // First, make sure that the subtask name does not already exist
         boolean nameExists = false;
         for(SubTask task: subTasks){
             if(task.getName().equals(taskName)){
@@ -105,13 +117,15 @@ public class Task {
             }
         }
         if (nameExists){
-            // Need to handle what happens if user attempts to recreate existing name, do we overwrite?
+            // If name already exists, do not construct
             return false;
         } else {
             subTasks.add(new SubTask(taskName, priority, description, dueDate));
             return true;
         }
     }
+
+    // Same constructor but without a date
     public boolean addSubTask(String taskName, int priority, String description){
         boolean nameExists = false;
         for(SubTask task: subTasks){
@@ -141,10 +155,12 @@ public class Task {
                 '}';
     }
 
+    // Hacky method to duplicate the task without accidentally duplicating its SubTasks
     public Task clone() {
         return new Task(this.name, this.priority, this.description, this.dueDate);
     }
 
+    // Implementation for the visitor pattern
     public void accept(Visitor v){
         v.visit(this);
     }

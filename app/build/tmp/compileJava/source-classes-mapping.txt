@@ -4,10 +4,10 @@ module-info.java
  module-info
 edu/isu/cs/cs2263/group4project/Command.java
  edu.isu.cs.cs2263.group4project.Command
-edu/isu/cs/cs2263/group4project/Admin.java
- edu.isu.cs.cs2263.group4project.Admin
 edu/isu/cs/cs2263/group4project/Settings.java
  edu.isu.cs.cs2263.group4project.Settings
+edu/isu/cs/cs2263/group4project/Admin.java
+ edu.isu.cs.cs2263.group4project.Admin
 edu/isu/cs/cs2263/group4project/TaskViewState.java
  edu.isu.cs.cs2263.group4project.TaskViewState
 edu/isu/cs/cs2263/group4project/SubList.java
@@ -51,29 +51,31 @@ edu/isu/cs/cs2263/group4project/TaskPageState.java
  edu.isu.cs.cs2263.group4project.TaskPageState$1$1
  edu.isu.cs.cs2263.group4project.TaskPageState$1$2
  edu.isu.cs.cs2263.group4project.TaskPageState$1$3
-edu/isu/cs/cs2263/group4project/User.java
- edu.isu.cs.cs2263.group4project.User
+ edu.isu.cs.cs2263.group4project.TaskPageState$1$4
+ edu.isu.cs.cs2263.group4project.TaskPageState$1$5
 edu/isu/cs/cs2263/group4project/ComparatorPriority.java
  edu.isu.cs.cs2263.group4project.ComparatorPriority
-edu/isu/cs/cs2263/group4project/UserLists.java
- edu.isu.cs.cs2263.group4project.UserLists
+edu/isu/cs/cs2263/group4project/User.java
+ edu.isu.cs.cs2263.group4project.User
 edu/isu/cs/cs2263/group4project/Task.java
  edu.isu.cs.cs2263.group4project.Task
+edu/isu/cs/cs2263/group4project/UserLists.java
+ edu.isu.cs.cs2263.group4project.UserLists
 edu/isu/cs/cs2263/group4project/AdminState.java
  edu.isu.cs.cs2263.group4project.AdminState
  edu.isu.cs.cs2263.group4project.AdminState$1
 edu/isu/cs/cs2263/group4project/SearchingVisitor.java
  edu.isu.cs.cs2263.group4project.SearchingVisitor
-edu/isu/cs/cs2263/group4project/UIState.java
- edu.isu.cs.cs2263.group4project.UIState
 edu/isu/cs/cs2263/group4project/GUIController.java
  edu.isu.cs.cs2263.group4project.GUIController
+edu/isu/cs/cs2263/group4project/UIState.java
+ edu.isu.cs.cs2263.group4project.UIState
 edu/isu/cs/cs2263/group4project/ComparatorDate.java
  edu.isu.cs.cs2263.group4project.ComparatorDate
-edu/isu/cs/cs2263/group4project/ComparatorLabel.java
- edu.isu.cs.cs2263.group4project.ComparatorLabel
 edu/isu/cs/cs2263/group4project/SignUpState.java
  edu.isu.cs.cs2263.group4project.SignUpState
  edu.isu.cs.cs2263.group4project.SignUpState$1
+edu/isu/cs/cs2263/group4project/ComparatorLabel.java
+ edu.isu.cs.cs2263.group4project.ComparatorLabel
 edu/isu/cs/cs2263/group4project/Section.java
  edu.isu.cs.cs2263.group4project.Section
