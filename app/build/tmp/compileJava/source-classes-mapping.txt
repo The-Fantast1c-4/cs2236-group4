@@ -8,6 +8,8 @@ edu/isu/cs/cs2263/group4project/Admin.java
  edu.isu.cs.cs2263.group4project.Admin
 edu/isu/cs/cs2263/group4project/Settings.java
  edu.isu.cs.cs2263.group4project.Settings
+edu/isu/cs/cs2263/group4project/TaskViewState.java
+ edu.isu.cs.cs2263.group4project.TaskViewState
 edu/isu/cs/cs2263/group4project/SubList.java
  edu.isu.cs.cs2263.group4project.SubList
 edu/isu/cs/cs2263/group4project/ChangeSettingsState.java
@@ -19,10 +21,10 @@ edu/isu/cs/cs2263/group4project/Comment.java
 edu/isu/cs/cs2263/group4project/LoginState.java
  edu.isu.cs.cs2263.group4project.LoginState
  edu.isu.cs.cs2263.group4project.LoginState$1
-edu/isu/cs/cs2263/group4project/PasswordChangeState.java
- edu.isu.cs.cs2263.group4project.PasswordChangeState
 edu/isu/cs/cs2263/group4project/StandardUser.java
  edu.isu.cs.cs2263.group4project.StandardUser
+edu/isu/cs/cs2263/group4project/PasswordChangeState.java
+ edu.isu.cs.cs2263.group4project.PasswordChangeState
 edu/isu/cs/cs2263/group4project/DatabaseTests.java
  edu.isu.cs.cs2263.group4project.DatabaseTests
 edu/isu/cs/cs2263/group4project/Visitor.java
