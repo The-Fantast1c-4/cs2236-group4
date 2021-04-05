@@ -406,7 +406,7 @@ public class SubListState implements UIState{
                 }
                 if(event.getSource()==viewTask){
                     Task tempTask = tasks.getSelectionModel().getSelectedItem();
-                    App.setState(new TaskViewState(stage,list.getName(),sectionName, tempTask.getName()));
+                    App.setState(new TaskViewState(stage,superList.getName(),list.getName(),sectionName, tempTask.getName()));
                 }
                 if(event.getSource()==moveList){
 

@@ -14,10 +14,16 @@ public class TaskViewState implements UIState{
     private List list;
     private Task task;
 
+    public TaskViewState(Stage stage, String list,String subList, String section, String task){
+        this.stage = stage;
+        this.task = App.getUser().getLists().getList(list).getSublist(subList).getSection(section).getTask(task);
+    }
+
     public TaskViewState(Stage stage, String list, String section, String task){
         this.stage = stage;
         this.task = App.getUser().getLists().getList(list).getSection(section).getTask(task);
     }
+
 
     public void handle(EventHandler event){
 
