@@ -32,7 +32,7 @@ public class PasswordChangeState implements UIState  {
         //creating child nodes
         stage.setTitle("Password Change");
         Button changePassword = new Button("Change Password");
-        Button exit = new Button("Exit   ");
+        Button exit = new Button("Exit to Admin Page");
         TextField userFirstLast = new TextField();
         userFirstLast.setPromptText("User Name");
         PasswordField password = new PasswordField();
@@ -41,6 +41,7 @@ public class PasswordChangeState implements UIState  {
         Label newPassword= new Label("New Password");
         Label verifyPassword = new Label("Verify Password");
         Label adminPass = new Label("Admin Password");
+        Label label1=new Label("Password Changed");
 
         //creating Gridpane
         GridPane gridPane = new GridPane();
@@ -66,6 +67,7 @@ public class PasswordChangeState implements UIState  {
         changePassword.setStyle("-fx-background-color: #e48257;");
         exit.setStyle("-fx-background-color: #e48257;");
         gridPane.setStyle("-fx-background-color: #f2edd7;");
+        label1.setStyle("-fx-text-fill: green;");
 
 
         EventHandler<MouseEvent> handler = new EventHandler<MouseEvent>() {
@@ -78,6 +80,7 @@ public class PasswordChangeState implements UIState  {
                     Admin admin=App.getAdmin();
                     if (admin.changeUserPassword(user,newPass)){
                         System.out.println("Password Change successful");
+                        gridPane.add(label1,4,4);
                     } else {
                         System.out.println("Password Change NOT successful");
                     }

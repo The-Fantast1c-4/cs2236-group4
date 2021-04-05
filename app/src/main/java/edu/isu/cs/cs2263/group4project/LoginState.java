@@ -92,6 +92,7 @@ public class LoginState implements UIState {
                             App.setAdmin(user);            // You need to have a way to set the current user to be the admin or something
                             App.setState(new AdminState(stage));
                         }
+                        main.add(wrong, 1, 3);
 
                     } else {
 

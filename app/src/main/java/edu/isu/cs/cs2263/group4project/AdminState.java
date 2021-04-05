@@ -53,9 +53,9 @@ public class AdminState implements UIState{
 
         //creating a grid
         GridPane gridPane = new GridPane();
-        gridPane.setPadding(new Insets(20.0D, 20.0D, 20.0D, 20.0D));
-        gridPane.setVgap(30.0D);
-        gridPane.setHgap(20.0D);
+        gridPane.setPadding(new Insets(15.0D, 15.0D, 15.0D, 15.0D));
+        gridPane.setVgap(20.0D);
+        gridPane.setHgap(10.0D);
         gridPane.setAlignment(Pos.CENTER);
 
 

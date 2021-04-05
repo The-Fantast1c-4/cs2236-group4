@@ -57,8 +57,8 @@ public class ChangeSettingsState implements UIState {
         }
 
 
-        Label label2=new Label("Changes Saved ");
-        Button backBtn = new Button("Back   ");
+        Label label2=new Label("Changes Saved     ");
+        Button backBtn = new Button("Back to Admin Page");
         Button saveBtn = new Button(" Save Changes");
         Button browseUserDataBtn=new Button("Browse User Data Location");
 
@@ -77,10 +77,10 @@ public class ChangeSettingsState implements UIState {
         gridPane.add(cb,0,3);
         gridPane.add(browseBtn,0,5);
         gridPane.add(browseUserDataBtn,4,1);
-        gridPane.add(backBtn,5,7);
+        gridPane.add(backBtn,4,7);
         gridPane.add(itemCount,5,5);
         gridPane.add(itemLabel,4,5);
-        gridPane.add(saveBtn,3,7);
+        gridPane.add(saveBtn,2,7);
 
 
         EventHandler<MouseEvent> handler = new EventHandler<MouseEvent>() {
@@ -152,7 +152,7 @@ public class ChangeSettingsState implements UIState {
                         settings.setItemsShown(itemsShown);
                         settings.setUserDataLocation(userDataLocation);
 
-                        gridPane.add(label2,6,6);
+                        gridPane.add(label2,2,3);
 
 
                     }
@@ -183,6 +183,7 @@ public class ChangeSettingsState implements UIState {
         itemCount.setStyle("-fx-background-color: #ADD8E6;");
         gridPane.setStyle("-fx-background-color: #f2edd7;");
         saveBtn.setStyle("-fx-background-color: #e48257;");
+        label2.setStyle("-fx-text-fill: green;");
 
 
         //set scene
