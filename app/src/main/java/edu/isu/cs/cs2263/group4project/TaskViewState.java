@@ -208,7 +208,6 @@ public class TaskViewState implements UIState{
                     priorityList.getItems().addAll(1,2,3,4,5);
                     priorityList.setValue(task.getPriority());
                     DatePicker dueDatePicker = new DatePicker();
-                    dueDatePicker.setValue(task.getDueDate());
                     Button createTask = new Button("Edit Task");
                     Button cancel = new Button("Cancel");
                     //create containers

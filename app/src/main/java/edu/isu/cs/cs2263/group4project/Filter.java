@@ -20,12 +20,17 @@ public class Filter {
 
     // This method controls the sorting by delegating the sortTerm to auxiliary methods
     public static ArrayList<Task> sortBy(Section section, String sortTerm){
-        return switch (sortTerm) {
-            case "label" -> sortByLabel(section);
-            case "priority" -> sortByPriority(section);
-            case "date" -> sortByDate(section);
-            default -> null;
-        };
+        ArrayList<Task> sorted;
+        switch (sortTerm) {
+            case "label":
+                return sortByLabel(section);
+            case "priority":
+                return sortByPriority(section);
+            case "date":
+                return sortByDate(section);
+            default:
+                return null;
+        }
     }
 
     // This method sorts the Section by the first label in each task
