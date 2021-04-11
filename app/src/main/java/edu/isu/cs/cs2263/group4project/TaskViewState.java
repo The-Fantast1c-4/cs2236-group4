@@ -273,7 +273,47 @@ public class TaskViewState implements UIState{
 
                 }
                 if(event.getSource() == addLabel){
-                    
+                    Stage newLabel = new Stage();
+                    newLabel.setTitle("New Label");
+                    TextField labelName = new TextField();
+                    Button submit = new Button("Add Label");
+                    Button cancel = new Button("Cancel");
+                    GridPane main = new GridPane();
+                    main.add(labelName, 0, 0);
+                    main.add(submit, 0, 1);
+                    main.add(cancel, 1, 1);
+
+                    main.setStyle("-fx-background-color: #f2edd7");
+                    cancel.setStyle("-fx-background-color: #e48257");
+                    submit.setStyle("-fx-background-color: #e48257");
+
+                    newLabel.setX(stage.getX() + (stage.getWidth() / 2) - 200);
+                    newLabel.setY(stage.getY() + (stage.getHeight() / 2) - 150);
+                    newLabel.setWidth(400);
+                    newLabel.setHeight(300);
+
+                    newLabel.setScene(new Scene(main));
+                    newLabel.show();
+
+                    EventHandler<MouseEvent> handler1 = new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+                            if(event.getSource()==cancel){
+                                newLabel.close();
+                            }
+                            if(event.getSource()==newLabel){
+                                String label = labelName.getText();
+
+                                task.addLabel(label);
+
+                                IOManager.saveUser(App.getUser());
+                                newLabel.close();
+
+                            }
+                        }
+                    };
+                    cancel.setOnMouseClicked(handler1);
+                    submit.setOnMouseClicked(handler1);
                 }
             }
         };

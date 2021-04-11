@@ -27,6 +27,8 @@ public class Admin extends User{
         IOManager.saveUserMacro(this.getUserInfo());
     }
 
+
+
     // Returns a list of the users, but only their profile information, not their data
     public ArrayList<UserInfo> getAllUsers(){
         return IOManager.loadUserMacro();
