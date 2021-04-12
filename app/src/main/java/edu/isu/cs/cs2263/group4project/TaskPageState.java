@@ -80,7 +80,7 @@ public class TaskPageState implements UIState{
 
         taskColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
-        completeColumn.setCellValueFactory(new PropertyValueFactory<>("isComplete"));
+        completeColumn.setCellValueFactory(new PropertyValueFactory<>("complete"));
 
 
         tasks.getColumns().addAll(taskColumn,dateColumn,completeColumn);

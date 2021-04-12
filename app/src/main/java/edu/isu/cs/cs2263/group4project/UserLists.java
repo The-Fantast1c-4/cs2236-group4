@@ -1,6 +1,7 @@
 package edu.isu.cs.cs2263.group4project;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 // UserLists houses all of the user's lists at once and allows for some specific methods for changing lists
 
@@ -23,7 +24,10 @@ public class UserLists {
 
     /* Method to return lists */
     public ArrayList<List> getLists(){
-        return lists;
+        ArrayList<List> allLists = new ArrayList<>();
+        allLists.addAll(lists);
+        allLists.addAll(generateMacroLists());
+        return allLists;
         //returns lists
     }
 
@@ -46,11 +50,12 @@ public class UserLists {
                 nonArchivedLists.add(list);
             }
         }
+        nonArchivedLists.addAll(generateMacroLists());
         return nonArchivedLists;
     }
 
     public List getList(String listName){
-        for (List list : lists){
+        for (List list : getLists()){
             if (list.getName().equals(listName)){
                 return list;
             }
@@ -73,7 +78,115 @@ public class UserLists {
         v.visit(this);
     }
 
+    public ArrayList<List> generateMacroLists() {
+        List today = new List("Today", "List of tasks that are due today");
+        List overdue = new List("Overdue", "List of tasks that are overdue");
+        List upcoming = new List("Upcoming", "List of tasks that are upcoming");
+        List completed = new List("Completed", "List of tasks that are completed");
 
+        Section completedDef = completed.getSection("Default Section");
+        Section upcomingDef = upcoming.getSection("Default Section");
+        Section overdueDef = overdue.getSection("Default Section");
+        Section todayDef = today.getSection("Default Section");
+
+        for (List list : lists){
+            for (Section section : list.getSections()) {
+                for (Task task : section.getTasks()){
+                    switch (getTaskState(task)) {
+                        case 0:
+                            completedDef.addTask(task);
+                            break;
+                        case 1:
+                            todayDef.addTask(task);
+                            break;
+                        case 2:
+                            upcomingDef.addTask(task);
+                            break;
+                        case 3:
+                            overdueDef.addTask(task);
+                            break;
+                    }
+                    for (SubTask subTask : task.getSubTasks()){
+                        switch (getTaskState(subTask)) {
+                            case 0:
+                                completedDef.addTask(subTask);
+                                break;
+                            case 1:
+                                todayDef.addTask(subTask);
+                                break;
+                            case 2:
+                                upcomingDef.addTask(subTask);
+                                break;
+                            case 3:
+                                overdueDef.addTask(subTask);
+                                break;
+                        }
+                    }
+                }
+            }
+            for (SubList subList : list.getSubLists()){
+                for (Section section : list.getSections()) {
+                    for (Task task : section.getTasks()){
+                        switch (getTaskState(task)) {
+                            case 0:
+                                completedDef.addTask(task);
+                                break;
+                            case 1:
+                                todayDef.addTask(task);
+                                break;
+                            case 2:
+                                upcomingDef.addTask(task);
+                                break;
+                            case 3:
+                                overdueDef.addTask(task);
+                                break;
+                        }
+                        for (SubTask subTask : task.getSubTasks()){
+                            switch (getTaskState(subTask)) {
+                                case 0:
+                                    completedDef.addTask(subTask);
+                                    break;
+                                case 1:
+                                    todayDef.addTask(subTask);
+                                    break;
+                                case 2:
+                                    upcomingDef.addTask(subTask);
+                                    break;
+                                case 3:
+                                    overdueDef.addTask(subTask);
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        ArrayList<List> macroLists = new ArrayList<>();
+        macroLists.add(today);
+        macroLists.add(upcoming);
+        macroLists.add(overdue);
+        macroLists.add(completed);
+        return macroLists;
+    }
+
+    private int getTaskState(Task task){
+        Date currentDate = new Date();
+        if (task.isComplete()) {
+            return 0;       // This is if the task is already complete
+        }
+        if (task.getDueDate().after(currentDate)) {
+            if ((task.getDueDate().getTime() - currentDate.getTime()) < 43200000) {
+                return 1;       // This is if the due date is upcoming in the next day
+            } else {
+                return 2;       // This is if the due date is upcoming later than the next day
+            }
+        }
+        if (task.isOverDue()) {
+            return 3;           // This is if the task is overdue
+        }
+        return -1;       // This is if there is an error
+
+    }
 
 
 
