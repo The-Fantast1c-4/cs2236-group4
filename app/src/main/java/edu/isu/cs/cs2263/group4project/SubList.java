@@ -22,7 +22,9 @@ public class SubList extends List {
         return;
     }
 
-
+    public List convertToList(){
+        return new List(this.getName(), this.getDescription());
+    }
 
     public void accept(Visitor v){
         v.visit(this);

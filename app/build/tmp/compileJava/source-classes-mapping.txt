@@ -62,6 +62,9 @@ edu/isu/cs/cs2263/group4project/TaskPageState.java
  edu.isu.cs.cs2263.group4project.TaskPageState$1$4
  edu.isu.cs.cs2263.group4project.TaskPageState$1$5
  edu.isu.cs.cs2263.group4project.TaskPageState$1$6
+ edu.isu.cs.cs2263.group4project.TaskPageState$1$7
+ edu.isu.cs.cs2263.group4project.TaskPageState$1$8
+ edu.isu.cs.cs2263.group4project.TaskPageState$1$9
 edu/isu/cs/cs2263/group4project/User.java
  edu.isu.cs.cs2263.group4project.User
 edu/isu/cs/cs2263/group4project/ComparatorPriority.java

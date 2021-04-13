@@ -1,6 +1,7 @@
 package edu.isu.cs.cs2263.group4project;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 // The list object contains the Project the user has specified
 // Inside of each list object are sections, and these sections contain the tasks
@@ -164,6 +165,16 @@ public class List {
         boolean wasRemoved = subLists.remove(subList);
         if (!wasRemoved){
             throw new Error("Specified sublist was not found in the list of sublists");
+        }
+    }
+
+    // Reschedules all tasks in this list only if the current list is the overdue task list
+    public void rescheduleAllTasks(Date newDate) {
+        if (!getName().equals("Overdue")) {
+            return;
+        }
+        for (Task task : getSection("Default Section").getTasks()) {
+            task.setDueDate(newDate);
         }
     }
 
