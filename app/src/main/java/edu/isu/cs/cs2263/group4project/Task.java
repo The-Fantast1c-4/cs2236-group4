@@ -90,6 +90,9 @@ public class Task {
     // Check to see if the task is overdue
     public boolean isOverDue() {
         //returns true if overdue
+        if (isComplete()) {
+            return false;
+        }
         return dueDate.after(new Date());       // Date() constructor automatically sets the time to the current time
     }
 
