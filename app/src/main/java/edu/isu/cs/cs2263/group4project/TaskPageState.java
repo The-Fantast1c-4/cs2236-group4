@@ -2,6 +2,7 @@ package edu.isu.cs.cs2263.group4project;
 
 import com.google.common.collect.ForwardingTable;
 import com.google.common.collect.Table;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -77,11 +78,21 @@ public class TaskPageState implements UIState{
         TableColumn<Task, String> taskColumn = new TableColumn<>("Task");
         TableColumn<Task, Date> dateColumn = new TableColumn<>("Due Date");
         TableColumn<Task, String> completeColumn = new TableColumn<>("Complete");
+        TableColumn<Task,String> overDueColumn=new TableColumn<>("Status");
+
 
         taskColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
         completeColumn.setCellValueFactory(new PropertyValueFactory<>("complete"));
 
+        //This for loop adds a status column to show overdue or not.
+        for (Task task: list.getSection(sectionName).getTasks()) {
+            if (task.isOverDue()){
+                overDueColumn.setCellValueFactory(c-> new SimpleStringProperty("Overdue"));
+            } else {
+                overDueColumn.setCellValueFactory(c-> new SimpleStringProperty("On time"));
+            }
+        }
 
         tasks.getColumns().addAll(taskColumn,dateColumn,completeColumn);
         tasks.getItems().addAll(list.getSection(sectionName).getTasks());
