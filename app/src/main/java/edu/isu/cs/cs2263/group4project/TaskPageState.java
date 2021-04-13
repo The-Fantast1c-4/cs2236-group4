@@ -354,23 +354,124 @@ public class TaskPageState implements UIState{
                         label.setStyle("-fx-text-fill: black");
                     }
                 }
-                if (event.getSource()==delete){
-                    Task tempTask = tasks.getSelectionModel().getSelectedItem();
-                    App.getUser().getLists().getList(list.getName()).getSection(sectionName).deleteTask(tempTask);
-                    IOManager.saveUser(App.getUser());
-                    App.setState(new TaskPageState(stage,list.getName(),sectionName));
 
+                if (event.getSource()==delete){
+                    Stage delTask = new Stage();
+                    delTask.setTitle("Delete Task");
+                    Button del=new Button("Delete");
+                    Button cancel=new Button("Cancel");
+                    Label label=new Label("Are you sure to delete?");
+                    label.setStyle("-fx-text-fill: Red");
+                    GridPane gridPane1=new GridPane();
+                    gridPane1.add(label,2,1);
+                    gridPane1.add(del,1,4);
+                    gridPane1.add(cancel,3,4);
+                    gridPane1.setStyle("-fx-background-color: #f2edd7");
+                    del.setStyle("-fx-background-color: #e48257");
+                    cancel.setStyle("-fx-background-color: #e48257");
+                    gridPane1.setVgap(10);
+                    delTask.setScene(new Scene(gridPane1));
+                    delTask.show();
+                    EventHandler<MouseEvent> handler1 = new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+
+                            if (event.getSource() == del) {
+                                Task tempTask = tasks.getSelectionModel().getSelectedItem();
+                                App.getUser().getLists().getList(list.getName()).getSection(sectionName).deleteTask(tempTask);
+                                IOManager.saveUser(App.getUser());
+                                App.setState(new TaskPageState(stage, list.getName(), sectionName));
+                                delTask.close();
+                            } else{
+                                if (event.getSource()==cancel){
+                                    delTask.close();
+                                }
+
+                            }
+                        }
+
+                    };
+                    del.setOnMouseClicked(handler1);
+                    cancel.setOnMouseClicked(handler1);
                 }
                 if (event.getSource()==deleteSection){
-                    list.deleteSection(list.getSection(sectionName));
-                    IOManager.saveUser(App.getUser());
-                    App.setState(new TaskPageState(stage,list.getName()));
+                    Stage delSection = new Stage();
+                    delSection.setTitle("Delete Section");
+                    Button del=new Button("Delete");
+                    Button cancel=new Button("Cancel");
+                    Label label=new Label("Are you sure to delete?");
+                    label.setStyle("-fx-text-fill: Red");
+                    GridPane gridPane1=new GridPane();
+                    gridPane1.add(label,2,1);
+                    gridPane1.add(del,1,4);
+                    gridPane1.add(cancel,3,4);
+                    gridPane1.setStyle("-fx-background-color: #f2edd7");
+                    del.setStyle("-fx-background-color: #e48257");
+                    cancel.setStyle("-fx-background-color: #e48257");
+                    gridPane1.setVgap(5);
+                    delSection.setScene(new Scene(gridPane1));
+                    delSection.show();
+                    EventHandler<MouseEvent> handler1 = new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+
+                            if (event.getSource() == del) {
+                                list.deleteSection(list.getSection(sectionName));
+                                IOManager.saveUser(App.getUser());
+                                App.setState(new TaskPageState(stage,list.getName()));
+                                delSection.close();
+                            } else{
+                                if (event.getSource()==cancel){
+                                    delSection.close();
+                                }
+
+                            }
+                        }
+
+                    };
+                    del.setOnMouseClicked(handler1);
+                    cancel.setOnMouseClicked(handler1);
                 }
                 if (event.getSource()==deleteList){
-                    App.getUser().getLists().deleteList(list);
-                    IOManager.saveUser(App.getUser());
-                    App.setState(new HomePageState(stage));
+                    Stage delList = new Stage();
+                    delList.setTitle("Delete List");
+                    Button del=new Button("Delete");
+                    Button cancel=new Button("Cancel");
+                    Label label=new Label("Are you sure to delete?");
+                    label.setStyle("-fx-text-fill: Red");
+                    GridPane gridPane1=new GridPane();
+                    gridPane1.add(label,2,1);
+                    gridPane1.add(del,1,4);
+                    gridPane1.add(cancel,3,4);
+                    gridPane1.setVgap(5);
+                    gridPane1.setStyle("-fx-background-color: #f2edd7");
+                    del.setStyle("-fx-background-color: #e48257");
+                    cancel.setStyle("-fx-background-color: #e48257");
+                    delList.setScene(new Scene(gridPane1));
+                    delList.show();
+                    EventHandler<MouseEvent> handler1 = new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+
+                            if (event.getSource() == del) {
+                                App.getUser().getLists().deleteList(list);
+                                IOManager.saveUser(App.getUser());
+                                App.setState(new HomePageState(stage));
+                                delList.close();
+                            } else{
+                                if (event.getSource()==cancel){
+                                    delList.close();
+                                }
+
+                            }
+                        }
+
+                    };
+                    del.setOnMouseClicked(handler1);
+                    cancel.setOnMouseClicked(handler1);
+
                 }
+
                 if (event.getSource()==duplicate){
                     Task tempTask = tasks.getSelectionModel().getSelectedItem();
                     list.getSection(sectionName).cloneTask(tempTask);
