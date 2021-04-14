@@ -18,15 +18,20 @@ import java.util.Date;
 public class TaskViewState implements UIState{
     private Stage stage;
     private List list;
+    private Section section;
     private Task task;
 
-    public TaskViewState(Stage stage, String list,String subList, String section, String task){
+    public TaskViewState(Stage stage, String list, String subList, String section, String task){
         this.stage = stage;
+        this.list = App.getUser().getLists().getList(list);
+        this.section = App.getUser().getLists().getList(list).getSublist(subList).getSection(section);
         this.task = App.getUser().getLists().getList(list).getSublist(subList).getSection(section).getTask(task);
     }
 
     public TaskViewState(Stage stage, String list, String section, String task){
         this.stage = stage;
+        this.list = App.getUser().getLists().getList(list);
+        this.section = App.getUser().getLists().getList(list).getSection(section);
         this.task = App.getUser().getLists().getList(list).getSection(section).getTask(task);
     }
 
@@ -110,7 +115,7 @@ public class TaskViewState implements UIState{
             @Override
             public void handle(MouseEvent event) {
                 if(event.getSource() == back){
-                    App.setState(new HomePageState(stage));
+                    App.setState(new TaskPageState(stage, list.getName(), section.getName()));
                 }
                 if(event.getSource() == logOut){
                     App.setUser(null);
