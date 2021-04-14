@@ -26,7 +26,6 @@ public class TaskPageState implements UIState{
     private Stage stage;
     private List list;
     private String sectionName = "Default Section";
-    private String[] priorities = {"Low", "Medium", "High", "Highest"};
 
     public TaskPageState(Stage stage,String list,String section){
         this.list = App.getUser().getLists().getList(list);

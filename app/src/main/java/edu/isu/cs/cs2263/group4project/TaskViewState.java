@@ -20,6 +20,7 @@ public class TaskViewState implements UIState{
     private List list;
     private Section section;
     private Task task;
+    private String[] priorities = {"Low", "Medium", "High", "Highest"};
 
     public TaskViewState(Stage stage, String list, String subList, String section, String task){
         this.stage = stage;
@@ -55,7 +56,7 @@ public class TaskViewState implements UIState{
         Label name = new Label(task.getName());
         Label dueDate = new Label("Due: " + task.getDueDate());
         Label overdue = new Label("Overdue");
-        Label priority = new Label("Priority: " + task.getPriority());
+        Label priority = new Label("Priority: " + priorities[task.getPriority() - 1]);
         TextArea description = new TextArea(task.getDescription());
         //subtask and label containers
         ListView<SubTask> subtasks = new ListView<SubTask>();
@@ -64,6 +65,8 @@ public class TaskViewState implements UIState{
         //containers
         VBox main = new VBox();
         HBox topBar = new HBox();
+        HBox topLeft = new HBox();
+        HBox topRight = new HBox();
         HBox body = new HBox();
         HBox bottomBar = new HBox();
         VBox leftSide = new VBox();
@@ -73,7 +76,9 @@ public class TaskViewState implements UIState{
         HBox labelBox = new HBox();
         HBox subtaskBox = new HBox();
         //build layout
-        topBar.getChildren().addAll(name, completed, back, logOut);
+        topLeft.getChildren().addAll(name, completed);
+        topRight.getChildren().addAll(back, logOut);
+        topBar.getChildren().addAll(topLeft, topRight);
         descBox.getChildren().addAll(description);
         propBox.getChildren().addAll(dueDate, overdue, priority);
         leftSide.getChildren().addAll(descBox, propBox);
@@ -85,9 +90,13 @@ public class TaskViewState implements UIState{
         main.getChildren().addAll(topBar, body, bottomBar);
         //styling
         main.setAlignment(Pos.CENTER);
-        topBar.setSpacing(20);
-        topBar.setPadding(new Insets(10,0,0,150));
+        topBar.setSpacing(500);
+        topBar.setPadding(new Insets(10,0,0,120));
         topBar.setAlignment(Pos.TOP_LEFT);
+        topLeft.setSpacing(20);
+        topRight.setSpacing(20);
+        topLeft.setAlignment(Pos.TOP_LEFT);
+        topRight.setAlignment(Pos.TOP_RIGHT);
         body.setSpacing(50);
         body.setPadding(new Insets(10,0,0,0));
         body.setAlignment(Pos.CENTER);
@@ -96,6 +105,8 @@ public class TaskViewState implements UIState{
         bottomBar.setAlignment(Pos.BOTTOM_LEFT);
         rightSide.setSpacing(5);
         leftSide.setSpacing(10);
+        propBox.setAlignment(Pos.CENTER);
+        propBox.setSpacing(20);
         subtasks.setMaxSize(100000,200);
 
         back.setStyle("-fx-background-color: #e48257");
@@ -131,9 +142,9 @@ public class TaskViewState implements UIState{
                     Label dueDateLabel = new Label("Due Date");
                     TextField titleText = new TextField();
                     TextField descriptionText = new TextField();
-                    ComboBox<Integer> priorityList = new ComboBox<>();
-                    priorityList.getItems().addAll(1,2,3,4,5);
-                    priorityList.setValue(1);
+                    ComboBox<String> priorityList = new ComboBox<>();
+                    priorityList.getItems().addAll("Low", "Medium", "High", "Highest");
+                    priorityList.setValue("Low");
                     DatePicker dueDatePicker = new DatePicker();
                     dueDatePicker.setValue(LocalDate.now());
                     Button createTask = new Button("Create Task");
@@ -177,7 +188,7 @@ public class TaskViewState implements UIState{
                             if(event.getSource()==createTask){
                                 String title = titleText.getText();
                                 String description = descriptionText.getText();
-                                int priority = priorityList.getValue();
+                                int priority = getPriorityInt(priorityList.getValue());
                                 LocalDate dueDate = dueDatePicker.getValue();
 
 
@@ -209,9 +220,9 @@ public class TaskViewState implements UIState{
                     titleText.setText(task.getName());
                     TextField descriptionText = new TextField();
                     descriptionText.setText(task.getDescription());
-                    ComboBox<Integer> priorityList = new ComboBox<>();
-                    priorityList.getItems().addAll(1,2,3,4,5);
-                    priorityList.setValue(task.getPriority());
+                    ComboBox<String> priorityList = new ComboBox<>();
+                    priorityList.getItems().addAll("Low", "Medium", "High", "Highest");
+                    priorityList.setValue(priorities[task.getPriority() - 1]);
                     DatePicker dueDatePicker = new DatePicker();
                     Button createTask = new Button("Edit Task");
                     Button cancel = new Button("Cancel");
@@ -254,7 +265,7 @@ public class TaskViewState implements UIState{
                             if(event.getSource()==createTask){
                                 String title = titleText.getText();
                                 String description = descriptionText.getText();
-                                int temppriority = priorityList.getValue();
+                                int temppriority = getPriorityInt(priorityList.getValue());
                                 LocalDate dueDate = dueDatePicker.getValue();
 
 
@@ -327,5 +338,15 @@ public class TaskViewState implements UIState{
         addSubtask.setOnMouseClicked(handler);
         editTask.setOnMouseClicked(handler);
         addLabel.setOnMouseClicked(handler);
+    }
+
+    int getPriorityInt(String value){
+        return switch (value) {
+            case "Low" -> 1;
+            case "Medium" -> 2;
+            case "High" -> 3;
+            case "Highest" -> 4;
+            default -> 1;
+        };
     }
 }
