@@ -94,8 +94,20 @@ public class TaskPageState implements UIState{
             }
         }
 
-        tasks.getColumns().addAll(taskColumn,dateColumn,completeColumn);
-        tasks.getItems().addAll(list.getSection(sectionName).getTasks());
+        /*tasks.getColumns().addAll(taskColumn,dateColumn,completeColumn);
+        tasks.getItems().addAll(list.getSection(sectionName).getTasks());   */
+
+
+        //This code shows only incomplete tasks, complete tasks can be seen only when sorted by completed.
+        tasks.getColumns().addAll(taskColumn,dateColumn,completeColumn,overDueColumn);
+        ArrayList<Task> temp=list.getSection(sectionName).getTasks();
+        for (Task task: temp){
+            if (task.isComplete()){
+                return;
+            } else {
+                tasks.getItems().addAll(task);
+            }
+        }
 
 
 
