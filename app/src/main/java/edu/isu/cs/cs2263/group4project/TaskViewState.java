@@ -1,5 +1,7 @@
 package edu.isu.cs.cs2263.group4project;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -61,6 +63,8 @@ public class TaskViewState implements UIState{
         //subtask and label containers
         ListView<SubTask> subtasks = new ListView<SubTask>();
         ComboBox labels = new ComboBox();
+        ObservableList labelList = FXCollections.observableArrayList(task.getLabels());
+        labels.getItems().addAll(labelList);
         Button addLabel = new Button("+");
         //containers
         VBox main = new VBox();
@@ -263,23 +267,30 @@ public class TaskViewState implements UIState{
                                 editTask.close();
                             }
                             if(event.getSource()==createTask){
-                                String title = titleText.getText();
-                                String description = descriptionText.getText();
-                                int temppriority = getPriorityInt(priorityList.getValue());
-                                LocalDate dueDate = dueDatePicker.getValue();
+                                String newTitle = titleText.getText();
+                                String newDescription = descriptionText.getText();
+                                int newPriority = getPriorityInt(priorityList.getValue());
+                                LocalDate newDate = dueDatePicker.getValue();
 
 
                                 ZoneId defaultZoneID = ZoneId.systemDefault();
-                                Date date = Date.from(dueDate.atStartOfDay(defaultZoneID).toInstant());
+                                Date date;
+                                if (newDate != null) {
+                                    date = Date.from(newDate.atStartOfDay(defaultZoneID).toInstant());
+                                }else{
+                                    date = null;
+                                }
 
-                                task.setName(title);
-                                task.setDescription(description);
-                                task.setDueDate(date);
-                                task.setPriority(temppriority);
+                                task.setName(newTitle);
+                                task.setDescription(newDescription);
+                                if (date != null){
+                                    task.setDueDate(date);
+                                }
+                                task.setPriority(newPriority);
 
                                 IOManager.saveUser(App.getUser());
+                                App.setState(new TaskViewState(stage, list.getName(), section.getName(), task.getName()));
                                 editTask.close();
-
                             }
                         }
                     };
@@ -288,43 +299,45 @@ public class TaskViewState implements UIState{
 
                 }
                 if(event.getSource() == addLabel){
-                    Stage newLabel = new Stage();
-                    newLabel.setTitle("New Label");
-                    TextField labelName = new TextField();
-                    Button submit = new Button("Add Label");
+                    Stage addLabel = new Stage();
+                    addLabel.setTitle("Add Label");
+                    TextField newLabel= new TextField();
+                    newLabel.setPromptText("New Label");
+                    Button submit = new Button("Submit");
                     Button cancel = new Button("Cancel");
-                    GridPane main = new GridPane();
-                    main.add(labelName, 0, 0);
-                    main.add(submit, 0, 1);
-                    main.add(cancel, 1, 1);
+
+                    HBox buttonsBox = new HBox();
+                    VBox main = new VBox();
+
+                    buttonsBox.getChildren().addAll(submit,cancel);
+                    main.getChildren().addAll(newLabel,buttonsBox);
+
+
+                    addLabel.setX(stage.getX() + (stage.getWidth() / 2) - 200);
+                    addLabel.setY(stage.getY() + (stage.getHeight() / 2) - 150);
+                    addLabel.setWidth(400);
+                    addLabel.setHeight(300);
+
+                    addLabel.setScene(new Scene(main));
+                    addLabel.show();
 
                     main.setStyle("-fx-background-color: #f2edd7");
-                    cancel.setStyle("-fx-background-color: #e48257");
                     submit.setStyle("-fx-background-color: #e48257");
-
-                    newLabel.setX(stage.getX() + (stage.getWidth() / 2) - 200);
-                    newLabel.setY(stage.getY() + (stage.getHeight() / 2) - 150);
-                    newLabel.setWidth(400);
-                    newLabel.setHeight(300);
-
-                    newLabel.setScene(new Scene(main));
-                    newLabel.show();
+                    cancel.setStyle("-fx-background-color: #e48257");
 
                     EventHandler<MouseEvent> handler1 = new EventHandler<MouseEvent>() {
                         @Override
                         public void handle(MouseEvent event) {
                             if(event.getSource()==cancel){
-                                newLabel.close();
+                                addLabel.close();
                             }
-                            if(event.getSource()==newLabel){
-                                String label = labelName.getText();
-
-                                task.addLabel(label);
-
+                            if(event.getSource()==submit||(name.getText()!="")){
+                                task.addLabel(newLabel.getText());
                                 IOManager.saveUser(App.getUser());
-                                newLabel.close();
-
+                                App.setState(new TaskViewState(stage,list.getName(), section.getName(), task.getName()));
+                                addLabel.close();
                             }
+
                         }
                     };
                     cancel.setOnMouseClicked(handler1);
