@@ -2,6 +2,7 @@ package edu.isu.cs.cs2263.group4project;
 
 import com.google.common.collect.ForwardingTable;
 import com.google.common.collect.Table;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -77,38 +78,52 @@ public class TaskPageState implements UIState{
         TableView<Task> tasks = new TableView();
         TableColumn<Task, String> taskColumn = new TableColumn<>("Task");
         TableColumn<Task, Date> dateColumn = new TableColumn<>("Due Date");
-        TableColumn<Task, String> completeColumn = new TableColumn<>("Complete");
+        TableColumn<Task, String> completeColumn = new TableColumn<>("Completed?");
         TableColumn<Task,String> overDueColumn=new TableColumn<>("Status");
 
 
-        taskColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        dateColumn.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
-        completeColumn.setCellValueFactory(new PropertyValueFactory<>("complete"));
-
-        //This for loop adds a status column to show overdue or not.
-        for (Task task: list.getSection(sectionName).getTasks()) {
-            if (task.isOverDue()){
-                overDueColumn.setCellValueFactory(c-> new SimpleStringProperty("Overdue"));
-            } else {
-                overDueColumn.setCellValueFactory(c-> new SimpleStringProperty("On time"));
-            }
-        }
-
-        /*tasks.getColumns().addAll(taskColumn,dateColumn,completeColumn);
-        tasks.getItems().addAll(list.getSection(sectionName).getTasks());   */
-
-
-        //This code shows only incomplete tasks, complete tasks can be seen only when sorted by completed.
         tasks.getColumns().addAll(taskColumn,dateColumn,completeColumn,overDueColumn);
+
+        //Showing only incomplete tasks, complete tasks can be seen only when sorted by completed.
         ArrayList<Task> temp=list.getSection(sectionName).getTasks();
         for (Task task: temp){
-            if (task.isComplete()){
-                return;
-            } else {
+            if (!task.isComplete()) {
                 tasks.getItems().addAll(task);
             }
         }
 
+        taskColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
+        //completeColumn.setCellValueFactory(new PropertyValueFactory<>("complete"));
+        completeColumn.setCellValueFactory(cellData -> {
+            boolean complete = cellData.getValue().isComplete();
+            String completeAsString;
+            if(complete == true)
+            {
+                completeAsString= "Yes";
+            }
+            else
+            {
+                completeAsString = "No";
+            }
+
+            return new ReadOnlyStringWrapper(completeAsString);
+        });
+        overDueColumn.setCellValueFactory(cellData -> {
+            boolean overdue = cellData.getValue().isOverDue();
+            String overdueAsString;
+            if(overdue == true)
+            {
+                overdueAsString= "Overdue";
+            }
+            else
+            {
+                overdueAsString= "On time";
+
+            }
+
+            return new ReadOnlyStringWrapper(overdueAsString);
+        });
 
 
         ComboBox comments = new ComboBox();

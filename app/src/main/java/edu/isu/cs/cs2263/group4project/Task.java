@@ -93,7 +93,7 @@ public class Task {
         if (isComplete()) {
             return false;
         }
-        return dueDate.after(new Date());       // Date() constructor automatically sets the time to the current time
+        return dueDate.before(new Date());       // Date() constructor automatically sets the time to the current time
     }
 
     // Add a new label
