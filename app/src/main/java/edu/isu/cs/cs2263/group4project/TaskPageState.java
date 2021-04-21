@@ -64,6 +64,12 @@ public class TaskPageState implements UIState{
         Button duplicate = new Button("Duplicate");
         Button viewTask = new Button("View Task");
 
+        TableView<Task> tasks = new TableView();
+        TableColumn<Task, String> taskColumn = new TableColumn<>("Task");
+        TableColumn<Task, Date> dateColumn = new TableColumn<>("Due Date");
+        TableColumn<Task, String> completeColumn = new TableColumn<>("Completed?");
+        TableColumn<Task,String> overDueColumn=new TableColumn<>("Status");
+
         ArrayList<Label> sections = new ArrayList<>();
         for(Section sect: App.getUser().getLists().getList(list.getName()).getSections()){
             sections.add(new Label(sect.getName()));
@@ -71,19 +77,11 @@ public class TaskPageState implements UIState{
         for(Label label : sections){
             if (label.getText().equals(sectionName)){
                 label.setStyle("-fx-text-fill: red");
+
             }
         }
-        //table
-
-        TableView<Task> tasks = new TableView();
-        TableColumn<Task, String> taskColumn = new TableColumn<>("Task");
-        TableColumn<Task, Date> dateColumn = new TableColumn<>("Due Date");
-        TableColumn<Task, String> completeColumn = new TableColumn<>("Completed?");
-        TableColumn<Task,String> overDueColumn=new TableColumn<>("Status");
-
 
         tasks.getColumns().addAll(taskColumn,dateColumn,completeColumn,overDueColumn);
-
         //Showing only incomplete tasks, complete tasks can be seen only when sorted by completed.
         ArrayList<Task> temp=list.getSection(sectionName).getTasks();
         for (Task task: temp){
@@ -94,7 +92,6 @@ public class TaskPageState implements UIState{
 
         taskColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
-        //completeColumn.setCellValueFactory(new PropertyValueFactory<>("complete"));
         completeColumn.setCellValueFactory(cellData -> {
             boolean complete = cellData.getValue().isComplete();
             String completeAsString;
@@ -378,7 +375,14 @@ public class TaskPageState implements UIState{
                         }
                         lab.setStyle("-fx-text-fill: red");
                         tasks.getItems().clear();
-                        tasks.getItems().addAll(App.getUser().getLists().getList(list.getName()).getSection(sectionName).getTasks());
+                        //ArrayList<Task> temp=list.getSection(sectionName).getTasks();
+                        for (Task task: list.getSection(sectionName).getTasks()){
+                           // ArrayList<Task> temp=list.getSection(sectionName).getTasks();
+                            if (!task.isComplete()) {
+                                tasks.getItems().addAll(task);
+                            }
+                        }
+
                     }
                 }
                 if (event.getSource()==searchButton){
