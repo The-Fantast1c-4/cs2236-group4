@@ -48,6 +48,7 @@ public class TaskViewState implements UIState{
     public void testState(Stage stage){
         stage.setTitle("Task View");
         CheckBox completed = new CheckBox("Completed");
+        completed.setSelected(task.isComplete());
         //buttons
         Button logOut = new Button("LogOut");
         Button back = new Button("Back");
@@ -61,7 +62,8 @@ public class TaskViewState implements UIState{
         Label priority = new Label("Priority: " + priorities[task.getPriority() - 1]);
         TextArea description = new TextArea(task.getDescription());
         //subtask and label containers
-        ListView<SubTask> subtasks = new ListView<SubTask>();
+        ObservableList<SubTask> subtasksList = FXCollections.observableArrayList(task.getSubTasks());
+        ListView<SubTask> subtasks = new ListView<>(subtasksList);
         ComboBox labels = new ComboBox();
         ObservableList labelList = FXCollections.observableArrayList(task.getLabels());
         labels.getItems().addAll(labelList);
@@ -130,7 +132,12 @@ public class TaskViewState implements UIState{
             @Override
             public void handle(MouseEvent event) {
                 if(event.getSource() == back){
-                    App.setState(new TaskPageState(stage, list.getName(), section.getName()));
+                    if (section != null){
+                        App.setState(new TaskPageState(stage, list.getName(), section.getName()));
+                    }else{
+                        App.setState(new TaskPageState(stage, list.getName()));
+                    }
+
                 }
                 if(event.getSource() == logOut){
                     App.setUser(null);
@@ -343,6 +350,12 @@ public class TaskViewState implements UIState{
                     cancel.setOnMouseClicked(handler1);
                     submit.setOnMouseClicked(handler1);
                 }
+                if (event.getSource() == completed){
+                    if (!task.isComplete()){
+                        task.markComplete();
+                    }
+                    IOManager.saveUser(App.getUser());
+                }
             }
         };
 
@@ -351,6 +364,7 @@ public class TaskViewState implements UIState{
         addSubtask.setOnMouseClicked(handler);
         editTask.setOnMouseClicked(handler);
         addLabel.setOnMouseClicked(handler);
+        completed.setOnMouseClicked(handler);
     }
 
     int getPriorityInt(String value){

@@ -151,11 +151,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
-                "name='" + name + '\'' +
-                ", priority=" + priority +
-                ", description='" + description + '\'' +
-                '}';
+        return name;
     }
 
     // Hacky method to duplicate the task without accidentally duplicating its SubTasks
