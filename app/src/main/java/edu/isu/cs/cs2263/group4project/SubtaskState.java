@@ -18,25 +18,28 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 
-public class TaskViewState implements UIState{
+public class SubtaskState implements UIState{
     private Stage stage;
     private List list;
     private Section section;
+    private Task superTask;
     private Task task;
     private String[] priorities = {"Low", "Medium", "High", "Highest"};
 
-    public TaskViewState(Stage stage, String list, String subList, String section, String task){
+    public SubtaskState(Stage stage, String list, String subList, String section, String task, String subtask){
         this.stage = stage;
         this.list = App.getUser().getLists().getList(list);
         this.section = App.getUser().getLists().getList(list).getSublist(subList).getSection(section);
-        this.task = App.getUser().getLists().getList(list).getSublist(subList).getSection(section).getTask(task);
+        this.superTask = App.getUser().getLists().getList(list).getSublist(subList).getSection(section).getTask(task);
+        this.task = superTask.getSubTask(subtask);
     }
 
-    public TaskViewState(Stage stage, String list, String section, String task){
+    public SubtaskState(Stage stage, String list, String section, String task, String subtask){
         this.stage = stage;
         this.list = App.getUser().getLists().getList(list);
         this.section = App.getUser().getLists().getList(list).getSection(section);
-        this.task = App.getUser().getLists().getList(list).getSection(section).getTask(task);
+        this.superTask = App.getUser().getLists().getList(list).getSection(section).getTask(task);
+        this.task = superTask.getSubTask(subtask);
     }
 
 
@@ -47,7 +50,7 @@ public class TaskViewState implements UIState{
     public void run(){ testState(stage);}
 
     public void testState(Stage stage){
-        stage.setTitle("Task View");
+        stage.setTitle("Subtask View");
         CheckBox completed = new CheckBox("Completed");
         completed.setSelected(task.isComplete());
         //buttons
@@ -55,7 +58,6 @@ public class TaskViewState implements UIState{
         Button back = new Button("Back");
 
         Button editTask = new Button("Edit Task");
-        Button addSubtask = new Button("Add Subtask");
         //task value labels
         Label name = new Label(task.getName());
         Label dueDate = new Label("Due: " + task.getDueDate());
@@ -66,9 +68,7 @@ public class TaskViewState implements UIState{
         }
         Label priority = new Label("Priority: " + priorities[task.getPriority() - 1]);
         TextArea description = new TextArea(task.getDescription());
-        //subtask and label containers
-        ObservableList<SubTask> subtasksList = FXCollections.observableArrayList(task.getSubTasks());
-        ListView<SubTask> subtasks = new ListView<>(subtasksList);
+        //label container
         ComboBox labels = new ComboBox();
         ObservableList labelList = FXCollections.observableArrayList(task.getLabels());
         labels.getItems().addAll(labelList);
@@ -95,11 +95,9 @@ public class TaskViewState implements UIState{
         propBox.getChildren().addAll(dueDate, overdue, priority);
         leftSide.getChildren().addAll(descBox, propBox, bottomLeft);
         labelBox.getChildren().addAll(labels, addLabel);
-        subtaskBox.getChildren().addAll(subtasks);
         rightSide.getChildren().addAll(labelBox, subtaskBox, bottomRight);
         body.getChildren().addAll(leftSide, rightSide);
         bottomLeft.getChildren().addAll(editTask);
-        bottomRight.getChildren().addAll(addSubtask);
         main.getChildren().addAll(topBar, body);
         //styling
         main.setAlignment(Pos.CENTER);
@@ -119,13 +117,11 @@ public class TaskViewState implements UIState{
         leftSide.setSpacing(10);
         propBox.setAlignment(Pos.CENTER);
         propBox.setSpacing(20);
-        subtasks.setMaxSize(100000,200);
 
         back.setStyle("-fx-background-color: #e48257");
         logOut.setStyle("-fx-background-color: #e48257");
 
         editTask.setStyle("-fx-background-color: #e48257");
-        addSubtask.setStyle("-fx-background-color: #e48257");
         addLabel.setStyle("-fx-background-color: #e48257");
 
         main.setStyle("-fx-background-color: #f2edd7");
@@ -138,92 +134,11 @@ public class TaskViewState implements UIState{
             @Override
             public void handle(MouseEvent event) {
                 if(event.getSource() == back){
-                    if (section != null){
-                        App.setState(new TaskPageState(stage, list.getName(), section.getName()));
-                    }else{
-                        App.setState(new TaskPageState(stage, list.getName()));
-                    }
-
+                    App.setState(new TaskViewState(stage, list.getName(), section.getName(), superTask.getName()));
                 }
                 if(event.getSource() == logOut){
                     App.setUser(null);
                     App.setState(new LoginState(stage));
-                }
-                if(event.getSource() == addSubtask){
-                    Stage newSubTask = new Stage();
-                    newSubTask.setTitle("New Subtask");
-                    //create nodes
-                    Label titleLabel = new Label("Title");
-                    Label descriptionLabel = new Label("Description");
-                    Label priorityLabel = new Label("Priority");
-                    Label dueDateLabel = new Label("Due Date");
-                    TextField titleText = new TextField();
-                    TextField descriptionText = new TextField();
-                    ComboBox<String> priorityList = new ComboBox<>();
-                    priorityList.getItems().addAll("Low", "Medium", "High", "Highest");
-                    priorityList.setValue("Low");
-                    DatePicker dueDatePicker = new DatePicker();
-                    dueDatePicker.setValue(LocalDate.now());
-                    Button createTask = new Button("Create Task");
-                    Button cancel = new Button("Cancel");
-                    //create containers
-                    GridPane main = new GridPane();
-
-                    //fill containers
-                    main.add(titleLabel,0,0);
-                    main.add(descriptionLabel,0,1);
-                    main.add(priorityLabel,0,2);
-                    main.add(dueDateLabel,0,3);
-                    main.add(createTask,0,4);
-
-                    main.add(titleText,1,0);
-                    main.add(descriptionText,1,1);
-                    main.add(priorityList,1,2);
-                    main.add(dueDatePicker,1,3);
-                    main.add(cancel,1,4);
-
-
-                    newSubTask.setX(stage.getX() + (stage.getWidth() / 2) - 200);
-                    newSubTask.setY(stage.getY() + (stage.getHeight() / 2) - 150);
-                    newSubTask.setWidth(400);
-                    newSubTask.setHeight(300);
-
-                    newSubTask.setScene(new Scene(main));
-                    newSubTask.show();
-
-                    //style
-                    main.setStyle("-fx-background-color: #f2edd7");
-                    cancel.setStyle("-fx-background-color: #e48257");
-                    createTask.setStyle("-fx-background-color: #e48257");
-
-                    EventHandler<MouseEvent> handler1 = new EventHandler<MouseEvent>() {
-                        @Override
-                        public void handle(MouseEvent event) {
-                            if(event.getSource()==cancel){
-                                newSubTask.close();
-                            }
-                            if(event.getSource()==createTask){
-                                String title = titleText.getText();
-                                String description = descriptionText.getText();
-                                int priority = getPriorityInt(priorityList.getValue());
-                                LocalDate dueDate = dueDatePicker.getValue();
-
-
-                                ZoneId defaultZoneID = ZoneId.systemDefault();
-                                Date date = Date.from(dueDate.atStartOfDay(defaultZoneID).toInstant());
-
-                                SubTask tempTask = new SubTask(title,priority,description, date);
-                                task.addSubTask(tempTask);
-                                IOManager.saveUser(App.getUser());
-                                subtasks.getItems().add(tempTask);
-                                newSubTask.close();
-
-                            }
-                        }
-                    };
-                    cancel.setOnMouseClicked(handler1);
-                    createTask.setOnMouseClicked(handler1);
-
                 }
                 if(event.getSource() == editTask){
                     Stage editTask = new Stage();
@@ -302,7 +217,7 @@ public class TaskViewState implements UIState{
                                 task.setPriority(newPriority);
 
                                 IOManager.saveUser(App.getUser());
-                                App.setState(new TaskViewState(stage, list.getName(), section.getName(), task.getName()));
+                                App.setState(new SubtaskState(stage, list.getName(), section.getName(), superTask.getName(), task.getName()));
                                 editTask.close();
                             }
                         }
@@ -362,20 +277,14 @@ public class TaskViewState implements UIState{
                     }
                     IOManager.saveUser(App.getUser());
                 }
-                if(event.getSource()==subtasks){
-                    Task subTask = subtasks.getSelectionModel().getSelectedItem();
-                    App.setState(new SubtaskState(stage, list.getName(), section.getName(), task.getName(), subTask.getName()));
-                }
             }
         };
 
         back.setOnMouseClicked(handler);
         logOut.setOnMouseClicked(handler);
-        addSubtask.setOnMouseClicked(handler);
         editTask.setOnMouseClicked(handler);
         addLabel.setOnMouseClicked(handler);
         completed.setOnMouseClicked(handler);
-        subtasks.setOnMouseClicked(handler);
     }
 
     int getPriorityInt(String value){
@@ -388,3 +297,4 @@ public class TaskViewState implements UIState{
         };
     }
 }
+

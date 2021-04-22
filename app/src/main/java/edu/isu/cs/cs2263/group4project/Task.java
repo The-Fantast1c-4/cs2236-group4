@@ -144,6 +144,17 @@ public class Task {
             return true;
         }
     }
+
+    public SubTask getSubTask(String name){
+        //returns a subtask with the given name
+        for(SubTask subTask: subTasks){
+            if(subTask.getName().equals(name)){
+                return subTask;
+            }
+        }
+        return null;
+    }
+
     public void deleteSubTask(SubTask subTask){
         //deletes a subTask
         subTasks.remove(subTask);
