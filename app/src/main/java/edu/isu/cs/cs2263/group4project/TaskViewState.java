@@ -11,6 +11,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.time.LocalDate;
@@ -58,7 +59,11 @@ public class TaskViewState implements UIState{
         //task value labels
         Label name = new Label(task.getName());
         Label dueDate = new Label("Due: " + task.getDueDate());
-        Label overdue = new Label("Overdue");
+        Label overdue = new Label();
+        if (task.isOverDue()){
+            overdue.setText("OVERDUE");
+            overdue.setTextFill(Color.color(0.8, 0, 0));
+        }
         Label priority = new Label("Priority: " + priorities[task.getPriority() - 1]);
         TextArea description = new TextArea(task.getDescription());
         //subtask and label containers
@@ -74,7 +79,8 @@ public class TaskViewState implements UIState{
         HBox topLeft = new HBox();
         HBox topRight = new HBox();
         HBox body = new HBox();
-        HBox bottomBar = new HBox();
+        VBox bottomLeft = new VBox();
+        VBox bottomRight = new VBox();
         VBox leftSide = new VBox();
         VBox rightSide = new VBox();
         HBox descBox = new HBox();
@@ -87,13 +93,14 @@ public class TaskViewState implements UIState{
         topBar.getChildren().addAll(topLeft, topRight);
         descBox.getChildren().addAll(description);
         propBox.getChildren().addAll(dueDate, overdue, priority);
-        leftSide.getChildren().addAll(descBox, propBox);
+        leftSide.getChildren().addAll(descBox, propBox, bottomLeft);
         labelBox.getChildren().addAll(labels, addLabel);
         subtaskBox.getChildren().addAll(subtasks);
-        rightSide.getChildren().addAll(labelBox, subtaskBox);
+        rightSide.getChildren().addAll(labelBox, subtaskBox, bottomRight);
         body.getChildren().addAll(leftSide, rightSide);
-        bottomBar.getChildren().addAll(editTask, addSubtask);
-        main.getChildren().addAll(topBar, body, bottomBar);
+        bottomLeft.getChildren().addAll(editTask);
+        bottomRight.getChildren().addAll(addSubtask);
+        main.getChildren().addAll(topBar, body);
         //styling
         main.setAlignment(Pos.CENTER);
         topBar.setSpacing(500);
@@ -106,9 +113,8 @@ public class TaskViewState implements UIState{
         body.setSpacing(50);
         body.setPadding(new Insets(10,0,0,0));
         body.setAlignment(Pos.CENTER);
-        bottomBar.setSpacing(20);
-        bottomBar.setPadding(new Insets(10,0,0,150));
-        bottomBar.setAlignment(Pos.BOTTOM_LEFT);
+        bottomLeft.setAlignment(Pos.BOTTOM_LEFT);
+        bottomRight.setAlignment(Pos.BOTTOM_RIGHT);
         rightSide.setSpacing(5);
         leftSide.setSpacing(10);
         propBox.setAlignment(Pos.CENTER);
