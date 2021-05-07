@@ -421,9 +421,10 @@ public class TaskPageState implements UIState{
                             if (event.getSource() == del) {
                                 Task tempTask = tasks.getSelectionModel().getSelectedItem();
                                 App.getUser().getLists().getList(list.getName()).getSection(sectionName).deleteTask(tempTask);
-                                IOManager.saveUser(App.getUser());
                                 App.setState(new TaskPageState(stage, list.getName(), sectionName));
+                                IOManager.saveUser(App.getUser());
                                 delTask.close();
+
                             } else{
                                 if (event.getSource()==cancel){
                                     delTask.close();
@@ -572,9 +573,7 @@ public class TaskPageState implements UIState{
                     cancel.setOnMouseClicked(handler1);
                     save.setOnMouseClicked(handler1);
                 }
-                if(event.getSource()==subLists){
-                    //App.setState(new SLTaskPageState(stage,list.getName(),subLists.getFocusModel().getFocusedItem().getName()));
-                }
+                if(event.getSource()==subLists){ }
                 if(event.getSource()==labelSort){
                     prioritySort.setSelected(false);
                     completedSort.setSelected(false);
