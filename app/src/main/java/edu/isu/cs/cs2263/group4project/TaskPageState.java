@@ -2,6 +2,8 @@ package edu.isu.cs.cs2263.group4project;
 
 import com.google.common.collect.ForwardingTable;
 import com.google.common.collect.Table;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -62,6 +64,12 @@ public class TaskPageState implements UIState{
         Button duplicate = new Button("Duplicate");
         Button viewTask = new Button("View Task");
 
+        TableView<Task> tasks = new TableView();
+        TableColumn<Task, String> taskColumn = new TableColumn<>("Task");
+        TableColumn<Task, Date> dateColumn = new TableColumn<>("Due Date");
+        TableColumn<Task, String> completeColumn = new TableColumn<>("Completed?");
+        TableColumn<Task,String> overDueColumn=new TableColumn<>("Status");
+
         ArrayList<Label> sections = new ArrayList<>();
         for(Section sect: App.getUser().getLists().getList(list.getName()).getSections()){
             sections.add(new Label(sect.getName()));
@@ -69,23 +77,50 @@ public class TaskPageState implements UIState{
         for(Label label : sections){
             if (label.getText().equals(sectionName)){
                 label.setStyle("-fx-text-fill: red");
+
             }
         }
-        //table
 
-        TableView<Task> tasks = new TableView();
-        TableColumn<Task, String> taskColumn = new TableColumn<>("Task");
-        TableColumn<Task, Date> dateColumn = new TableColumn<>("Due Date");
-        TableColumn<Task, String> completeColumn = new TableColumn<>("Complete");
+        tasks.getColumns().addAll(taskColumn,dateColumn,completeColumn,overDueColumn);
+        //Showing only incomplete tasks, complete tasks can be seen only when sorted by completed.
+        ArrayList<Task> temp=list.getSection(sectionName).getTasks();
+        for (Task task: temp){
+            if (!task.isComplete()) {
+                tasks.getItems().addAll(task);
+            }
+        }
 
         taskColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
-        completeColumn.setCellValueFactory(new PropertyValueFactory<>("isComplete"));
+        completeColumn.setCellValueFactory(cellData -> {
+            boolean complete = cellData.getValue().isComplete();
+            String completeAsString;
+            if(complete == true)
+            {
+                completeAsString= "Yes";
+            }
+            else
+            {
+                completeAsString = "No";
+            }
 
+            return new ReadOnlyStringWrapper(completeAsString);
+        });
+        overDueColumn.setCellValueFactory(cellData -> {
+            boolean overdue = cellData.getValue().isOverDue();
+            String overdueAsString;
+            if(overdue == true)
+            {
+                overdueAsString= "Overdue";
+            }
+            else
+            {
+                overdueAsString= "On time";
 
-        tasks.getColumns().addAll(taskColumn,dateColumn,completeColumn);
-        tasks.getItems().addAll(list.getSection(sectionName).getTasks());
+            }
 
+            return new ReadOnlyStringWrapper(overdueAsString);
+        });
 
 
         ComboBox comments = new ComboBox();
@@ -204,9 +239,9 @@ public class TaskPageState implements UIState{
                     Label dueDateLabel = new Label("Due Date");
                     TextField titleText = new TextField();
                     TextField descriptionText = new TextField();
-                    ComboBox<Integer> priorityList = new ComboBox<>();
-                        priorityList.getItems().addAll(1,2,3,4,5);
-                        priorityList.setValue(1);
+                    ComboBox<String> priorityList = new ComboBox<>();
+                        priorityList.getItems().addAll("Low", "Medium", "High", "Highest");
+                        priorityList.setValue("Low");
                     DatePicker dueDatePicker = new DatePicker();
                     dueDatePicker.setValue(LocalDate.now());
                     Button createTask = new Button("Create Task");
@@ -250,7 +285,7 @@ public class TaskPageState implements UIState{
                             if(event.getSource()==createTask){
                                 String title = titleText.getText();
                                 String description = descriptionText.getText();
-                                int priority = priorityList.getValue();
+                                int priority = getPriorityInt(priorityList.getValue());
                                 LocalDate dueDate = dueDatePicker.getValue();
 
 
@@ -340,7 +375,14 @@ public class TaskPageState implements UIState{
                         }
                         lab.setStyle("-fx-text-fill: red");
                         tasks.getItems().clear();
-                        tasks.getItems().addAll(App.getUser().getLists().getList(list.getName()).getSection(sectionName).getTasks());
+                        //ArrayList<Task> temp=list.getSection(sectionName).getTasks();
+                        for (Task task: list.getSection(sectionName).getTasks()){
+                           // ArrayList<Task> temp=list.getSection(sectionName).getTasks();
+                            if (!task.isComplete()) {
+                                tasks.getItems().addAll(task);
+                            }
+                        }
+
                     }
                 }
                 if (event.getSource()==searchButton){
@@ -354,23 +396,125 @@ public class TaskPageState implements UIState{
                         label.setStyle("-fx-text-fill: black");
                     }
                 }
-                if (event.getSource()==delete){
-                    Task tempTask = tasks.getSelectionModel().getSelectedItem();
-                    App.getUser().getLists().getList(list.getName()).getSection(sectionName).deleteTask(tempTask);
-                    IOManager.saveUser(App.getUser());
-                    App.setState(new TaskPageState(stage,list.getName(),sectionName));
 
+                if (event.getSource()==delete){
+                    Stage delTask = new Stage();
+                    delTask.setTitle("Delete Task");
+                    Button del=new Button("Delete");
+                    Button cancel=new Button("Cancel");
+                    Label label=new Label("Are you sure to delete?");
+                    label.setStyle("-fx-text-fill: Red");
+                    GridPane gridPane1=new GridPane();
+                    gridPane1.add(label,2,1);
+                    gridPane1.add(del,1,4);
+                    gridPane1.add(cancel,3,4);
+                    gridPane1.setStyle("-fx-background-color: #f2edd7");
+                    del.setStyle("-fx-background-color: #e48257");
+                    cancel.setStyle("-fx-background-color: #e48257");
+                    gridPane1.setVgap(10);
+                    delTask.setScene(new Scene(gridPane1));
+                    delTask.show();
+                    EventHandler<MouseEvent> handler1 = new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+
+                            if (event.getSource() == del) {
+                                Task tempTask = tasks.getSelectionModel().getSelectedItem();
+                                App.getUser().getLists().getList(list.getName()).getSection(sectionName).deleteTask(tempTask);
+                                App.setState(new TaskPageState(stage, list.getName(), sectionName));
+                                IOManager.saveUser(App.getUser());
+                                delTask.close();
+
+                            } else{
+                                if (event.getSource()==cancel){
+                                    delTask.close();
+                                }
+
+                            }
+                        }
+
+                    };
+                    del.setOnMouseClicked(handler1);
+                    cancel.setOnMouseClicked(handler1);
                 }
                 if (event.getSource()==deleteSection){
-                    list.deleteSection(list.getSection(sectionName));
-                    IOManager.saveUser(App.getUser());
-                    App.setState(new TaskPageState(stage,list.getName()));
+                    Stage delSection = new Stage();
+                    delSection.setTitle("Delete Section");
+                    Button del=new Button("Delete");
+                    Button cancel=new Button("Cancel");
+                    Label label=new Label("Are you sure to delete?");
+                    label.setStyle("-fx-text-fill: Red");
+                    GridPane gridPane1=new GridPane();
+                    gridPane1.add(label,2,1);
+                    gridPane1.add(del,1,4);
+                    gridPane1.add(cancel,3,4);
+                    gridPane1.setStyle("-fx-background-color: #f2edd7");
+                    del.setStyle("-fx-background-color: #e48257");
+                    cancel.setStyle("-fx-background-color: #e48257");
+                    gridPane1.setVgap(5);
+                    delSection.setScene(new Scene(gridPane1));
+                    delSection.show();
+                    EventHandler<MouseEvent> handler1 = new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+
+                            if (event.getSource() == del) {
+                                list.deleteSection(list.getSection(sectionName));
+                                IOManager.saveUser(App.getUser());
+                                App.setState(new TaskPageState(stage,list.getName()));
+                                delSection.close();
+                            } else{
+                                if (event.getSource()==cancel){
+                                    delSection.close();
+                                }
+
+                            }
+                        }
+
+                    };
+                    del.setOnMouseClicked(handler1);
+                    cancel.setOnMouseClicked(handler1);
                 }
                 if (event.getSource()==deleteList){
-                    App.getUser().getLists().deleteList(list);
-                    IOManager.saveUser(App.getUser());
-                    App.setState(new HomePageState(stage));
+                    Stage delList = new Stage();
+                    delList.setTitle("Delete List");
+                    Button del=new Button("Delete");
+                    Button cancel=new Button("Cancel");
+                    Label label=new Label("Are you sure to delete?");
+                    label.setStyle("-fx-text-fill: Red");
+                    GridPane gridPane1=new GridPane();
+                    gridPane1.add(label,2,1);
+                    gridPane1.add(del,1,4);
+                    gridPane1.add(cancel,3,4);
+                    gridPane1.setVgap(5);
+                    gridPane1.setStyle("-fx-background-color: #f2edd7");
+                    del.setStyle("-fx-background-color: #e48257");
+                    cancel.setStyle("-fx-background-color: #e48257");
+                    delList.setScene(new Scene(gridPane1));
+                    delList.show();
+                    EventHandler<MouseEvent> handler1 = new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+
+                            if (event.getSource() == del) {
+                                App.getUser().getLists().deleteList(list);
+                                IOManager.saveUser(App.getUser());
+                                App.setState(new HomePageState(stage));
+                                delList.close();
+                            } else{
+                                if (event.getSource()==cancel){
+                                    delList.close();
+                                }
+
+                            }
+                        }
+
+                    };
+                    del.setOnMouseClicked(handler1);
+                    cancel.setOnMouseClicked(handler1);
+
                 }
+
                 if (event.getSource()==duplicate){
                     Task tempTask = tasks.getSelectionModel().getSelectedItem();
                     list.getSection(sectionName).cloneTask(tempTask);
@@ -429,9 +573,7 @@ public class TaskPageState implements UIState{
                     cancel.setOnMouseClicked(handler1);
                     save.setOnMouseClicked(handler1);
                 }
-                if(event.getSource()==subLists){
-                    //App.setState(new SLTaskPageState(stage,list.getName(),subLists.getFocusModel().getFocusedItem().getName()));
-                }
+                if(event.getSource()==subLists){ }
                 if(event.getSource()==labelSort){
                     prioritySort.setSelected(false);
                     completedSort.setSelected(false);
@@ -658,5 +800,13 @@ public class TaskPageState implements UIState{
         subLists.setOnMouseClicked(handler);
     }
 
-
+    int getPriorityInt(String value){
+        return switch (value) {
+            case "Low" -> 1;
+            case "Medium" -> 2;
+            case "High" -> 3;
+            case "Highest" -> 4;
+            default -> 1;
+        };
+    }
 }

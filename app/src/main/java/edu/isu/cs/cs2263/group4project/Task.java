@@ -90,7 +90,10 @@ public class Task {
     // Check to see if the task is overdue
     public boolean isOverDue() {
         //returns true if overdue
-        return dueDate.after(new Date());       // Date() constructor automatically sets the time to the current time
+        if (isComplete()) {
+            return false;
+        }
+        return dueDate.before(new Date());       // Date() constructor automatically sets the time to the current time
     }
 
     // Add a new label
@@ -141,6 +144,17 @@ public class Task {
             return true;
         }
     }
+
+    public SubTask getSubTask(String name){
+        //returns a subtask with the given name
+        for(SubTask subTask: subTasks){
+            if(subTask.getName().equals(name)){
+                return subTask;
+            }
+        }
+        return null;
+    }
+
     public void deleteSubTask(SubTask subTask){
         //deletes a subTask
         subTasks.remove(subTask);
@@ -148,11 +162,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
-                "name='" + name + '\'' +
-                ", priority=" + priority +
-                ", description='" + description + '\'' +
-                '}';
+        return name;
     }
 
     // Hacky method to duplicate the task without accidentally duplicating its SubTasks

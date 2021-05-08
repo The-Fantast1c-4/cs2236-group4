@@ -22,8 +22,8 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        // Here is where we put the call to our first state subclass
-        setState(new LoginState(primaryStage));
+        // Here is where we putLoginState the call to our first state subclass
+        setState(new LoadingState(primaryStage));
         state.run();
 
 

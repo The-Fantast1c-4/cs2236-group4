@@ -10,12 +10,23 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// WARNING: Some of these tests may fail only because of your compiler settings (there are some issues with Gradle tests)
+// First, if you get the error "Test events not received", do the following:
+//      In the IntelliJ settings, delegate control of tests in the build to IntelliJ rather than Gradle. See links below
+//      https://i.imgur.com/HpeUaUE.png
+//      https://stackoverflow.com/questions/57795263/test-events-were-not-received-when-run-tests-using-intellij
+// Secondly, now the root directory for the tests is likely incorrect (you will get multiple NoSuchFileExceptions)
+//      You can change this in the configurations for the tests. Click "edit configurations", and set the Working Directory to the following:
+//      /root/Documents/CS2263/cs2236-group4
+// The tests should now all pass. If they do not, feel free to email me at spierob2@isu.edu to determine if it is a compiler/IDE issue
+
 class AppTest {
 
     @Test
     void userInfoTests() {
         // Create new UserInfo
         UserInfo info = new UserInfo("shannon356", "Culley", "Shannon", "Business major", "shannon@isu.edu", "path", "password");
+        User culley = new StandardUser(info);
 
         // Test attemptLogin()
         // Test 1: Correct password
@@ -35,10 +46,10 @@ class AppTest {
         assertNotNull(admin.getAllUsers());
 
         // Test 2: changeUserPassword()
-        assertTrue(admin.changeUserPassword("mistryman", "newpassword"));
-        assertNotNull(IOManager.loadStandardUser("mistryman", "newpassword"));
-        admin.changeUserPassword("mistryman", "hereishispassword");
-        assertNotNull(IOManager.loadStandardUser("mistryman", "hereishispassword"));
+        assertTrue(admin.changeUserPassword("shannon356", "newpassword"));
+        assertNotNull(IOManager.loadStandardUser("shannon356", "newpassword"));
+        admin.changeUserPassword("shannon356", "hereishispassword");
+        assertNotNull(IOManager.loadStandardUser("shannon356", "hereishispassword"));
 
         // Test 3: changeAdminPassword()
         assertTrue(admin.changeUserPassword("admin", "newpass"));
@@ -96,5 +107,102 @@ class AppTest {
 
         // Test 3: loadAdmin()
         assertNotNull(IOManager.loadAdmin("admin").getUserInfo().getUsername(), "admin");
+    }
+
+    @Test
+    void ListTests() {
+        List list = new List("TestList", "Test");
+        // Test that the default section is automatically created
+        assertEquals(list.getSections().size(), 1);
+
+        // Get sections that do and do not exist
+        assertNotNull(list.getSection("Default Section"));
+        assertNull(list.getSection("Section that does not exist"));
+
+        // Create new sections
+        assertTrue(list.addSection("New section"));
+        assertFalse(list.addSection("New section"));        // Returns false if the section already exists
+
+        // Add sublist
+        assertTrue(list.addSubList("TestSublist", "Test"));
+        assertFalse(list.addSubList("TestSublist", "Not a test"));
+
+        // Get sublist
+        assertNotNull(list.getSublist("TestSublist"));
+        assertNull(list.getSublist("Sublist that does not exist"));
+
+        // Delete Sublist
+        list.deletesSubList(list.getSublist("TestSublist"));
+        assertNull(list.getSublist("TestSublist"));
+
+        // Delete section
+        list.deleteSection(list.getSection("New section"));
+        assertNull(list.getSection("New section"));
+
+    }
+
+    @Test
+    void SectionTests(){
+        Section section = new Section("Test");
+
+        // Add task and test
+        assertTrue(section.addTask("Test task", 3, "This is a test task"));
+        assertNotNull(section.getTask("Test task"));
+        assertFalse(section.addTask("Test task", 2, "Tasks with the same name are not allowed"));
+
+        // Get completed tasks
+        assertTrue(section.getCompletedTasks().isEmpty());
+        section.getTask("Test task").markComplete();
+        assertFalse(section.getCompletedTasks().isEmpty());
+
+        // Move task to list
+        List list = new List("Destination", "Discovery");
+        assertTrue(list.getSection("Default Section").getTasks().isEmpty());
+        section.moveToList(list, section.getTask("Test task"));
+        assertNull(section.getTask("Test task"));                   // Task should no longer be in original list
+        assertFalse(list.getSection("Default Section").getTasks().isEmpty());       // Task should now be in new list
+    }
+
+    @Test
+    void SettingsTests(){
+        Settings settings = IOManager.loadSettings();
+
+        // Tests to make sure that all the relevant files get moved when the data location setting gets changed
+        // This setting is very complex to test, so I recommend that you manually make sure that all the files have been moved over (they do)
+        settings.setUserDataLocation("./config/");
+        assertNotNull(IOManager.loadAdmin("admin"));    // The Admin's file should now be in ./config/
+        settings.setUserDataLocation("./data/");
+        assertNotNull(IOManager.loadAdmin("admin"));    // The admin's file should now be in ./data/
+    }
+
+    @Test
+    void StandardUserTests() {
+        StandardUser user = IOManager.loadStandardUser("shannon356", "password");
+
+        // Run through the user's lists
+        assertNotNull(user.getLists());     // Making sure the lists were instantiated properly
+        UserLists lists = user.getLists();
+        lists.makeList("Test list", "Test for the StandardUser");
+        assertEquals(lists.getLists().size(), 5);       // Make sure there are 5 lists (test list and four inherent lists)
+
+        // Test the inherent lists
+        assertNotNull(lists.getList("Completed"));
+        assertNotNull(lists.getList("Overdue"));
+        assertNotNull(lists.getList("Today"));
+        assertNotNull(lists.getList("Upcoming"));
+    }
+
+    @Test
+    void TaskTests() {
+        Task task = new Task("Test task", 3, "Test for the tasks");
+
+        // Test if overdue
+        assertFalse(task.isOverDue());
+
+        // Test completeness
+        assertFalse(task.isComplete());
+        task.markComplete();
+        assertTrue(task.isComplete());
+
     }
 }

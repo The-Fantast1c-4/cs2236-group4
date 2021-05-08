@@ -15,7 +15,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class HomePageState implements UIState {
     private Stage stage;
@@ -34,9 +36,12 @@ public class HomePageState implements UIState {
         // Creating nodes
         stage.setTitle("Home");
         Button logOut = new Button("Log Out");
-        Button makeNewList = new Button("Make new List");
+        Button makeNewList = new Button("Make New List");
+        Button reschedule = new Button("Reschedule Overdue Lists");
+        DatePicker rescheduleCal = new DatePicker();
         Button viewArchived = new Button("View Archived Lists");
         Button searchBtn = new Button("Search");
+        Button viewProfile = new Button("View User Profile");
 
         TextField search = new TextField();
         search.setPromptText("Search here");
@@ -61,18 +66,23 @@ public class HomePageState implements UIState {
 
 
         gridPane.add(search,0,0);
-        gridPane.add(makeNewList, 0, 3);
+        gridPane.add(viewProfile, 2, 0);
+        HBox bottom = new HBox();
+        bottom.setSpacing(15);
+        bottom.getChildren().addAll(makeNewList,reschedule,rescheduleCal);
+        gridPane.add(bottom, 0, 3);
         gridPane.add(searchBtn, 3/2, 0);
         gridPane.add(viewArchived, 2, 3);
         gridPane.add(logOut, 3, 0);
         gridPane.add(lists, 0, 1);
 
 
-
         viewArchived.setStyle("-fx-background-color: #e48257;");
         makeNewList.setStyle("-fx-background-color: #e48257;");
+        reschedule.setStyle("-fx-background-color: #e48257;");
         logOut.setStyle("-fx-background-color: #e48257;");
         searchBtn.setStyle("-fx-background-color: #e48257;");
+        viewProfile.setStyle("-fx-background-color: #e48257;");
         gridPane.setStyle("-fx-background-color: #f2edd7;");
 
 
@@ -165,13 +175,27 @@ public class HomePageState implements UIState {
                         viewArchived.setText("View Archived Lists");
                     }
                 }
+                if(event.getSource() == viewProfile){
+                    App.setState(new ProfileState(stage));
+                }
+                if(event.getSource()==reschedule){
+                    if(rescheduleCal.getValue() != null) {
+                        ZoneId defaultZoneID = ZoneId.systemDefault();
+                        Date date = Date.from(rescheduleCal.getValue().atStartOfDay(defaultZoneID).toInstant());
+                        App.getUser().getLists().getList("Overdue").rescheduleAllTasks(date);
+                        IOManager.saveUser(App.getUser());
+                    }
+                }
             }
+
         };
         makeNewList.setOnMouseClicked(handler);
         logOut.setOnMouseClicked(handler);
         lists.setOnMouseClicked(handler);
         searchBtn.setOnMouseClicked(handler);
         viewArchived.setOnMouseClicked(handler);
+        viewProfile.setOnMouseClicked(handler);
+        reschedule.setOnMouseClicked(handler);
         }
 
     }
