@@ -31,6 +31,7 @@ public class ProfileState implements UIState{
     public void run(){testStage(stage);}
 
     public void testStage(Stage stage){
+        //displays the information of the current user
         stage.setTitle(App.getUser().getUserInfo().getUsername() + "'s Profile");
         //buttons
         Button back = new Button("Back");
@@ -80,9 +81,11 @@ public class ProfileState implements UIState{
             @Override
             public void handle(MouseEvent event) {
                 if(event.getSource() == back){
+                    //returns to the home page state
                     App.setState(new HomePageState(stage));
                 }
                 if(event.getSource() == logOut){
+                    //logs out the user and returns to the title screen
                     App.setUser(null);
                     App.setState(new LoginState(stage));
                 }

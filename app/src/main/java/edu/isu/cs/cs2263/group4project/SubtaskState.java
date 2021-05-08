@@ -26,6 +26,7 @@ public class SubtaskState implements UIState{
     private Task task;
     private String[] priorities = {"Low", "Medium", "High", "Highest"};
 
+    //constructors
     public SubtaskState(Stage stage, String list, String subList, String section, String task, String subtask){
         this.stage = stage;
         this.list = App.getUser().getLists().getList(list);
@@ -33,7 +34,6 @@ public class SubtaskState implements UIState{
         this.superTask = App.getUser().getLists().getList(list).getSublist(subList).getSection(section).getTask(task);
         this.task = superTask.getSubTask(subtask);
     }
-
     public SubtaskState(Stage stage, String list, String section, String task, String subtask){
         this.stage = stage;
         this.list = App.getUser().getLists().getList(list);
@@ -50,7 +50,9 @@ public class SubtaskState implements UIState{
     public void run(){ testState(stage);}
 
     public void testState(Stage stage){
+        //change window title
         stage.setTitle("Subtask View");
+        //completed checkbox
         CheckBox completed = new CheckBox("Completed");
         completed.setSelected(task.isComplete());
         //buttons
@@ -134,13 +136,16 @@ public class SubtaskState implements UIState{
             @Override
             public void handle(MouseEvent event) {
                 if(event.getSource() == back){
+                    //returns to the task view state for the parent task
                     App.setState(new TaskViewState(stage, list.getName(), section.getName(), superTask.getName()));
                 }
                 if(event.getSource() == logOut){
+                    //logs out the user and returns to the login screen
                     App.setUser(null);
                     App.setState(new LoginState(stage));
                 }
                 if(event.getSource() == editTask){
+                    //creates a popup that prompts the user to change the info of the current subtask
                     Stage editTask = new Stage();
                     editTask.setTitle("Edit Task");
                     //create nodes
@@ -156,7 +161,7 @@ public class SubtaskState implements UIState{
                     priorityList.getItems().addAll("Low", "Medium", "High", "Highest");
                     priorityList.setValue(priorities[task.getPriority() - 1]);
                     DatePicker dueDatePicker = new DatePicker();
-                    Button createTask = new Button("Edit Task");
+                    Button saveEdit = new Button("Edit Task");
                     Button cancel = new Button("Cancel");
                     //create containers
                     GridPane main = new GridPane();
@@ -166,7 +171,7 @@ public class SubtaskState implements UIState{
                     main.add(descriptionLabel,0,1);
                     main.add(priorityLabel,0,2);
                     main.add(dueDateLabel,0,3);
-                    main.add(createTask,0,4);
+                    main.add(saveEdit,0,4);
 
                     main.add(titleText,1,0);
                     main.add(descriptionText,1,1);
@@ -186,15 +191,17 @@ public class SubtaskState implements UIState{
                     //style
                     main.setStyle("-fx-background-color: #f2edd7");
                     cancel.setStyle("-fx-background-color: #e48257");
-                    createTask.setStyle("-fx-background-color: #e48257");
+                    saveEdit.setStyle("-fx-background-color: #e48257");
 
                     EventHandler<MouseEvent> handler1 = new EventHandler<MouseEvent>() {
                         @Override
                         public void handle(MouseEvent event) {
                             if(event.getSource()==cancel){
+                                //closes the edit subtask popup
                                 editTask.close();
                             }
-                            if(event.getSource()==createTask){
+                            if(event.getSource()==saveEdit){
+                                //saves the changes to the current subtask
                                 String newTitle = titleText.getText();
                                 String newDescription = descriptionText.getText();
                                 int newPriority = getPriorityInt(priorityList.getValue());
@@ -223,24 +230,29 @@ public class SubtaskState implements UIState{
                         }
                     };
                     cancel.setOnMouseClicked(handler1);
-                    createTask.setOnMouseClicked(handler1);
+                    saveEdit.setOnMouseClicked(handler1);
 
                 }
                 if(event.getSource() == addLabel){
+                    //creates a popup to prompt the user to create a label
                     Stage addLabel = new Stage();
                     addLabel.setTitle("Add Label");
+                    //input fields
                     TextField newLabel= new TextField();
+                    //labels
                     newLabel.setPromptText("New Label");
+                    //buttons
                     Button submit = new Button("Submit");
                     Button cancel = new Button("Cancel");
 
+                    //containers
                     HBox buttonsBox = new HBox();
                     VBox main = new VBox();
 
                     buttonsBox.getChildren().addAll(submit,cancel);
                     main.getChildren().addAll(newLabel,buttonsBox);
 
-
+                    //styling
                     addLabel.setX(stage.getX() + (stage.getWidth() / 2) - 200);
                     addLabel.setY(stage.getY() + (stage.getHeight() / 2) - 150);
                     addLabel.setWidth(400);
@@ -257,9 +269,11 @@ public class SubtaskState implements UIState{
                         @Override
                         public void handle(MouseEvent event) {
                             if(event.getSource()==cancel){
+                                //closes the popup
                                 addLabel.close();
                             }
                             if(event.getSource()==submit||(name.getText()!="")){
+                                //adds the label to the current subtask
                                 task.addLabel(newLabel.getText());
                                 IOManager.saveUser(App.getUser());
                                 App.setState(new TaskViewState(stage,list.getName(), section.getName(), task.getName()));
@@ -272,6 +286,7 @@ public class SubtaskState implements UIState{
                     submit.setOnMouseClicked(handler1);
                 }
                 if (event.getSource() == completed){
+                    //marks the subtask as completed
                     if (!task.isComplete()){
                         task.markComplete();
                     }
@@ -287,6 +302,7 @@ public class SubtaskState implements UIState{
         completed.setOnMouseClicked(handler);
     }
 
+    //converts a priority string to an integer
     int getPriorityInt(String value){
         return switch (value) {
             case "Low" -> 1;
