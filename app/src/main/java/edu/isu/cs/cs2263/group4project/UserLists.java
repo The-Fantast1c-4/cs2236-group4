@@ -21,6 +21,9 @@ public class UserLists {
         List newList = new List(name, description);
         lists.add(newList);
     }
+    public void makeList(List list){
+        lists.add(list);
+    }
 
     /* Method to return lists */
     public ArrayList<List> getLists(){

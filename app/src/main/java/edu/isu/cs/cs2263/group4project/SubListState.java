@@ -108,6 +108,7 @@ public class SubListState implements UIState{
         }else{archiveList.setText("UnArchive List");}
         Button deleteSection = new Button("Delete Section");
         Button deleteList = new Button("Delete List");
+        Button changeSubList = new Button("Make Normal List");
 
 
 
@@ -124,7 +125,7 @@ public class SubListState implements UIState{
         HBox bottomButtonBar = new HBox();
 
         //fill layout
-        bottomButtonBar.getChildren().addAll(makeTask,addSection,archiveList,deleteSection,deleteList);
+        bottomButtonBar.getChildren().addAll(makeTask,addSection,archiveList,deleteSection,deleteList,changeSubList);
         sectionLabels.getChildren().addAll(sections);
         taskBox.getChildren().addAll(sectionLabels,tasks);
         topButtonBar.getChildren().addAll(delete,moveList,moveSection,duplicate,viewTask);
@@ -168,6 +169,7 @@ public class SubListState implements UIState{
         archiveList.setStyle("-fx-background-color: #e48257");
         deleteSection.setStyle("-fx-background-color: #e48257");
         deleteList.setStyle("-fx-background-color: #e48257");
+        changeSubList.setStyle("-fx-background-color: #e48257");
 
 
         main.setStyle("-fx-background-color: #f2edd7");
@@ -565,6 +567,11 @@ public class SubListState implements UIState{
                     };
                     cancel.setOnMouseClicked(handler1);
                     save.setOnMouseClicked(handler1);
+                }if(event.getSource()==changeSubList){
+                    App.getUser().getLists().makeList(list.convertToList());
+                    App.getUser().getLists().getList(superList.getName()).deletesSubList(list);
+                    IOManager.saveUser(App.getUser());
+                    App.setState(new HomePageState(stage));
                 }
             }
         };
@@ -589,6 +596,7 @@ public class SubListState implements UIState{
         moveList.setOnMouseClicked(handler);
         moveSection.setOnMouseClicked(handler);
         addComment.setOnMouseClicked(handler);
+        changeSubList.setOnMouseClicked(handler);
     }
 
 
